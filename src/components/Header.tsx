@@ -6,20 +6,24 @@ interface HeaderProps {
   onChatToggle: () => void
   onAboutClick?: () => void
   onPricingClick?: () => void
+  onLogoClick?: () => void
 }
 
-export function Header({ onChatToggle, onAboutClick, onPricingClick }: HeaderProps) {
+export function Header({ onChatToggle, onAboutClick, onPricingClick, onLogoClick }: HeaderProps) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   return (
     <header className="header">
       <div className="container">
-        <div className="header-content">
-          {/* Logo */}
-          <div className="logo">
+        <div className="header-content">          {/* Logo */}
+          <button 
+            className="logo logo-button" 
+            onClick={onLogoClick}
+            type="button"
+          >
             <MessageSquare className="logo-icon" />
             <span className="logo-text">Robert AI</span>
-          </div>
+          </button>
 
           {/* Navigation Desktop */}
           <nav className="nav desktop-nav">

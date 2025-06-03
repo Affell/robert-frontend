@@ -23,12 +23,12 @@ function App() {
   }
 
   return (
-    <div className="app">
-      {currentView !== 'chat' && (
+    <div className="app">      {currentView !== 'chat' && (
         <Header 
           onChatToggle={() => setCurrentView('chat')} 
           onAboutClick={() => setCurrentView('about')}
           onPricingClick={() => setCurrentView('pricing')}
+          onLogoClick={() => setCurrentView('home')}
         />
       )}
       <main>
