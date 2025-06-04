@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import "./Pricing.css";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
+import { useNavigate } from "react-router-dom";
 
 interface PricingTier {
   id: string;
@@ -92,12 +93,12 @@ const pricingTiers: PricingTier[] = [
     icon: <Crown className="w-6 h-6" />,
   },
 ];
+export default function Pricing() {
+  const navigate = useNavigate();
+  const handleStartChat = () => {
+    navigate("/chat");
+  };
 
-interface PricingProps {
-  onStartChat?: () => void;
-}
-
-export default function Pricing({ onStartChat }: PricingProps) {
   return (
     <>
       <Header />
@@ -204,7 +205,7 @@ export default function Pricing({ onStartChat }: PricingProps) {
                   }}
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
-                  onClick={onStartChat}
+                  onClick={handleStartChat}
                 >
                   {tier.ctaText}
                 </motion.button>
@@ -264,7 +265,7 @@ export default function Pricing({ onStartChat }: PricingProps) {
               className="final-cta-button"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={onStartChat}
+              onClick={handleStartChat}
             >
               Commencer maintenant
               <Rocket size={20} />

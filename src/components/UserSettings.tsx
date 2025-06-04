@@ -22,13 +22,12 @@ export default function UserSettings({
   onClose,
   preferences,
   onUpdatePreferences,
-}: UserSettingsProps) {
-  const avatarColors = [
+}: UserSettingsProps) {  const avatarColors = [
     "#f97316",
-    "#3b82f6",
+    "#f59e0b",
     "#10b981",
     "#8b5cf6",
-    "#f59e0b",
+    "#ea580c",
     "#ef4444",
     "#06b6d4",
     "#84cc16",

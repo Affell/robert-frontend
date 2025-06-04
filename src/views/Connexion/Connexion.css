@@ -3,24 +3,35 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(
-    135deg,
-    var(--primary-900) 0%,
-    var(--primary-700) 100%
-  );
+  background: var(--background);
   padding: 2rem 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.account-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(ellipse at center, rgba(249, 115, 22, 0.1) 0%, transparent 70%);
+  pointer-events: none;
 }
 
 .account-card {
-  background: var(--primary-600);
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: 16px;
-  border: 1px solid var(--primary-400);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3),
-    0 10px 10px -5px rgba(0, 0, 0, 0.2);
+  box-shadow: var(--shadow-xl);
   padding: 3rem;
   width: 100%;
   max-width: 480px;
   margin: auto;
+  position: relative;
+  z-index: 2;
+  backdrop-filter: blur(10px);
 }
 
 .account-header {
@@ -31,19 +42,19 @@
 .account-icon {
   width: 64px;
   height: 64px;
-  color: var(--accent-500);
+  color: #f97316;
   margin: 0 auto 1rem;
 }
 
 .account-title {
   font-size: 2rem;
   font-weight: 700;
-  color: var(--text-50);
+  color: var(--text-primary);
   margin: 0 0 0.5rem 0;
 }
 
 .account-subtitle {
-  color: var(--text-300);
+  color: var(--text-secondary);
   font-size: 1rem;
   margin: 0;
 }
@@ -66,7 +77,7 @@
 .form-group label {
   display: block;
   font-weight: 600;
-  color: var(--text-200);
+  color: var(--text-primary);
   margin-bottom: 0.5rem;
   font-size: 0.875rem;
 }
@@ -82,29 +93,27 @@
   left: 12px;
   width: 20px;
   height: 20px;
-  color: var(--text-400);
+  color: var(--text-muted);
   z-index: 1;
 }
 
 .form-group input {
   width: 100%;
   padding: 12px 16px 12px 44px;
-  border: 2px solid var(--primary-400);
+  border: 2px solid var(--border);
   border-radius: 8px;
   font-size: 1rem;
   background: var(--primary-500);
   color: var(--text-50);
   transition: all 0.2s ease;
   box-sizing: border-box;
-}
-
-.form-group input::placeholder {
-  color: var(--text-400);
+  background: var(--surface-hover);
+  color: var(--text-primary);
 }
 
 .form-group input:focus {
   outline: none;
-  border-color: var(--accent-500);
+  border-color: #f97316;
   box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.1);
 }
 
@@ -113,7 +122,7 @@
   right: 12px;
   background: none;
   border: none;
-  color: var(--text-400);
+  color: var(--text-muted);
   cursor: pointer;
   padding: 4px;
   border-radius: 4px;
@@ -121,7 +130,7 @@
 }
 
 .password-toggle:hover {
-  color: var(--accent-500);
+  color: #f97316;
 }
 
 .form-options {
@@ -131,7 +140,7 @@
 }
 
 .forgot-password {
-  color: var(--accent-500);
+  color: #f97316;
   text-decoration: none;
   font-size: 0.875rem;
   font-weight: 500;
@@ -139,7 +148,7 @@
 }
 
 .forgot-password:hover {
-  color: var(--accent-600);
+  color: #ea580c;
   text-decoration: underline;
 }
 
@@ -159,12 +168,12 @@
 }
 
 .btn-primary {
-  background: var(--accent-500);
+  background: #f97316;
   color: white;
 }
 
 .btn-primary:hover {
-  background: var(--accent-600);
+  background: #ea580c;
   transform: translateY(-1px);
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
 }
@@ -182,15 +191,15 @@
 }
 
 .btn-social {
-  background: var(--primary-500);
-  border: 2px solid var(--primary-400);
-  color: var(--text-200);
+  background: var(--surface-hover);
+  border: 2px solid var(--border);
+  color: var(--text-primary);
   margin-bottom: 0.75rem;
 }
 
 .btn-social:hover {
-  background: var(--primary-400);
-  border-color: var(--primary-300);
+  background: var(--surface);
+  border-color: var(--border-light);
 }
 
 .btn-google {
@@ -203,14 +212,14 @@
 }
 
 .account-switch p {
-  color: var(--text-300);
+  color: var(--text-secondary);
   margin: 0;
 }
 
 .switch-mode-btn {
   background: none;
   border: none;
-  color: var(--accent-500);
+  color: #f97316;
   font-weight: 600;
   cursor: pointer;
   margin-left: 0.5rem;
@@ -219,7 +228,7 @@
 }
 
 .switch-mode-btn:hover {
-  color: var(--accent-600);
+  color: #ea580c;
 }
 
 .divider {
@@ -235,12 +244,12 @@
   left: 0;
   right: 0;
   height: 1px;
-  background: var(--primary-400);
+  background: var(--border);
 }
 
 .divider span {
-  background: var(--primary-600);
-  color: var(--text-400);
+  background: var(--surface);
+  color: var(--text-muted);
   padding: 0 1rem;
   font-size: 0.875rem;
   position: relative;
