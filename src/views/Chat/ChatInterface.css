@@ -104,14 +104,19 @@
 .message.user .message-content {
   background: var(--accent);
   color: white;
+  border: 1px solid var(--border);
 }
 
 .message.user .message-header .message-sender {
-  color: rgba(255, 255, 255, 0.9);
+  color: white;
 }
 
 .message.user .message-header .message-time {
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.message.user .message-text {
+  color: white;
 }
 
 .message-avatar {
@@ -359,4 +364,14 @@
 
 :root.dark-theme .message.user .message-content {
   background: var(--accent);
+  color: white;
+  border: 1px solid var(--border);
+}
+
+:root.dark-theme .message.user .message-header .message-sender {
+  color: white;
+}
+
+:root.dark-theme .message.user .message-header .message-time {
+  color: rgba(255, 255, 255, 0.8);
 }
