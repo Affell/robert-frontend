@@ -11,6 +11,11 @@
   z-index: 50;
 }
 
+.chat-interface.fullscreen {
+  height: 100vh;
+  top: 0;
+}
+
 .chat-interface.with-history .chat-main {
   margin-left: 300px;
 }
@@ -40,7 +45,10 @@
   gap: 1rem;
 }
 
-.back-button, .history-toggle, .settings-button, .more-button {
+.back-button,
+.history-toggle,
+.settings-button,
+.more-button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -54,7 +62,10 @@
   transition: all 0.2s ease;
 }
 
-.back-button:hover, .history-toggle:hover, .settings-button:hover, .more-button:hover {
+.back-button:hover,
+.history-toggle:hover,
+.settings-button:hover,
+.more-button:hover {
   background: var(--surface);
   color: var(--text-primary);
   transform: translateY(-1px);
@@ -248,7 +259,8 @@
 
 .chat-input:focus {
   border-color: var(--accent);
-  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.2), 0 0 0 1px rgba(249, 115, 22, 0.3);
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.2),
+    0 0 0 1px rgba(249, 115, 22, 0.3);
   transform: translateY(-1px);
 }
 
@@ -287,6 +299,148 @@
   transform: none;
 }
 
+/* Loader pour l'état de chargement */
+.chat-interface-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: calc(100vh - 80px);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding-top: 80px;
+}
+
+.loading-spinner {
+  background: white;
+  padding: 20px 40px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  font-weight: 500;
+  color: #374151;
+}
+
+/* Styles pour le markdown dans les messages du bot */
+.message-text .markdown-content {
+  line-height: 1.6;
+}
+
+.message-text .markdown-content p {
+  margin: 0.5rem 0;
+}
+
+.message-text .markdown-content p:first-child {
+  margin-top: 0;
+}
+
+.message-text .markdown-content p:last-child {
+  margin-bottom: 0;
+}
+
+.message-text .markdown-content ul {
+  margin: 0.5rem 0;
+  padding-left: 1.5rem;
+}
+
+.message-text .markdown-content li {
+  margin: 0.25rem 0;
+}
+
+.message-text .markdown-content strong {
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.message-text .markdown-content a {
+  color: var(--primary);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: all 0.2s ease;
+  word-break: break-word;
+}
+
+.message-text .markdown-content a:hover {
+  text-decoration: underline;
+  border-bottom-color: var(--primary);
+}
+
+.message-text .markdown-content code {
+  background: rgba(0, 0, 0, 0.1);
+  padding: 0.125rem 0.25rem;
+  border-radius: 0.25rem;
+  font-family: "Courier New", monospace;
+  font-size: 0.9em;
+}
+
+.message-text .markdown-content pre {
+  background: rgba(0, 0, 0, 0.1);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin: 0.5rem 0;
+}
+
+.message-text .markdown-content pre code {
+  background: none;
+  padding: 0;
+}
+
+.message-text .markdown-content blockquote {
+  border-left: 3px solid var(--primary);
+  padding-left: 1rem;
+  margin: 0.5rem 0;
+  font-style: italic;
+  opacity: 0.8;
+}
+
+.message-text .markdown-content h1,
+.message-text .markdown-content h2,
+.message-text .markdown-content h3,
+.message-text .markdown-content h4,
+.message-text .markdown-content h5,
+.message-text .markdown-content h6 {
+  margin: 1rem 0 0.5rem 0;
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.message-text .markdown-content h1:first-child,
+.message-text .markdown-content h2:first-child,
+.message-text .markdown-content h3:first-child,
+.message-text .markdown-content h4:first-child,
+.message-text .markdown-content h5:first-child,
+.message-text .markdown-content h6:first-child {
+  margin-top: 0;
+}
+
+/* Styles pour le thème sombre */
+:root.dark-theme .message-text .markdown-content strong {
+  color: var(--accent);
+}
+
+:root.dark-theme .message-text .markdown-content a {
+  color: var(--accent);
+}
+
+:root.dark-theme .message-text .markdown-content a:hover {
+  border-bottom-color: var(--accent);
+}
+
+:root.dark-theme .message-text .markdown-content code {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+:root.dark-theme .message-text .markdown-content pre {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+:root.dark-theme .message-text .markdown-content h1,
+:root.dark-theme .message-text .markdown-content h2,
+:root.dark-theme .message-text .markdown-content h3,
+:root.dark-theme .message-text .markdown-content h4,
+:root.dark-theme .message-text .markdown-content h5,
+:root.dark-theme .message-text .markdown-content h6 {
+  color: var(--accent);
+}
+
 /* Animations */
 @keyframes messageSlide {
   from {
@@ -300,7 +454,9 @@
 }
 
 @keyframes typingDots {
-  0%, 80%, 100% {
+  0%,
+  80%,
+  100% {
     transform: scale(0.8);
     opacity: 0.5;
   }
@@ -315,37 +471,38 @@
   .chat-interface.with-history .chat-main {
     margin-left: 0;
   }
-  
+
   .chat-interface.with-history .chat-input-container {
     left: 0;
   }
-  
+
   .chat-header {
     padding: 0.75rem 1rem;
   }
-  
+
   .messages-container {
     padding: 0.75rem;
     padding-bottom: 100px;
   }
-  
+
   .message {
     max-width: 95%;
   }
-  
+
   .chat-input-container {
     padding: 0.75rem 1rem;
   }
-  
+
   .chat-input-form {
     gap: 0.5rem;
   }
-  
-  .message-avatar, .user-avatar {
+
+  .message-avatar,
+  .user-avatar {
     width: 32px;
     height: 32px;
   }
-  
+
   .message-content {
     padding: 0.5rem 0.75rem;
   }

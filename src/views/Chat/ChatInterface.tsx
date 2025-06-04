@@ -9,13 +9,16 @@ import {
   Settings,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import ReactMarkdown from "react-markdown";
 import ChatHistory, { type ChatSession } from "../../components/ChatHistory";
 import UserSettings, {
   type UserPreferences,
 } from "../../components/UserSettings";
+import SimpleChatInterface from "../../components/SimpleChatInterface";
 import "./ChatInterface.css";
 import { useNavigate } from "react-router-dom";
-import Header from "../../components/Header/Header";
+import { useAuth } from "../../core/auth/AuthContext";
+import { postFetch } from "../../core/api/fetch";
 
 interface Message {
   id: string;
@@ -25,18 +28,34 @@ interface Message {
 }
 
 export default function ChatInterface() {
-  // États existants
+  const { isAuthenticated, loading } = useAuth();
+
+  // Si pas connecté, afficher l'interface simplifiée
+  if (!loading && !isAuthenticated) {
+    return <SimpleChatInterface />;
+  }
+  // Si en cours de chargement, afficher un loader
+  if (loading) {
+    return (
+      <div className="chat-interface-loading">
+        <div className="loading-spinner">Chargement...</div>
+      </div>
+    );
+  }
+
+  // États existants pour l'interface authentifiée
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "1",
       type: "bot",
       content:
-        "Bonjour ! Je suis Robert, votre assistant IA. Comment puis-je vous aider aujourd'hui ?",
+        "Bienvenue dans Robert AI ! Vous avez accès à toutes les fonctionnalités : historique des conversations, paramètres personnalisés, et bien plus. Comment puis-je vous aider aujourd'hui ?",
       timestamp: new Date(),
     },
   ]);
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const { token } = useAuth();
 
   // Nouveaux états pour les fonctionnalités
   const [showHistory, setShowHistory] = useState(false);
@@ -106,79 +125,69 @@ export default function ChatInterface() {
       setChatSessions(JSON.parse(savedSessions));
     }
   }, []);
-
-  const simulateBotResponse = (userMessage: string) => {
-    setIsTyping(true);
-
-    setTimeout(() => {
-      const responses = [
-        "C'est une excellente question ! Laissez-moi y réfléchir...",
-        "Je comprends votre demande. Voici ce que je peux vous dire à ce sujet...",
-        "Intéressant ! Basé sur votre question, je recommande...",
-        "Merci pour cette question. Voici mon analyse...",
-        "C'est un sujet fascinant. Permettez-moi de vous expliquer...",
-        "Excellente question ! Pour vous donner une réponse complète...",
-        "Je vois ce que vous voulez dire. Dans ce contexte...",
-        "C'est un point très pertinent. Voici ce que je peux vous dire...",
-      ];
-
-      const randomResponse =
-        responses[Math.floor(Math.random() * responses.length)];
-
-      const botMessage: Message = {
-        id: Date.now().toString(),
-        type: "bot",
-        content:
-          randomResponse +
-          " " +
-          `Concernant "${userMessage}", voici ma réponse détaillée qui devrait vous aider à mieux comprendre le sujet.`,
-        timestamp: new Date(),
-      };
-
-      setMessages((prev) => [...prev, botMessage]);
-      setIsTyping(false);
-
-      // Mettre à jour la session actuelle
-      updateCurrentSession(userMessage, botMessage);
-    }, 1000 + Math.random() * 2000);
-  };
-
-  const updateCurrentSession = (userMessage: string, _botMessage: Message) => {
-    setChatSessions((prev) => {
-      const updated = prev.map((session) => {
-        if (session.id === currentSessionId) {
-          return {
-            ...session,
-            messageCount: session.messageCount + 2,
-            preview:
-              userMessage.substring(0, 50) +
-              (userMessage.length > 50 ? "..." : ""),
-            timestamp: Date.now(),
-          };
-        }
-        return session;
-      });
-
-      // Sauvegarder dans localStorage
-      localStorage.setItem("robert-ai-sessions", JSON.stringify(updated));
-      return updated;
-    });
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputValue.trim() || isTyping) return;
 
+    const userText = inputValue.trim();
+
+    // Ajouter immédiatement le message de l'utilisateur
     const userMessage: Message = {
       id: Date.now().toString(),
       type: "user",
-      content: inputValue.trim(),
+      content: userText,
       timestamp: new Date(),
     };
 
     setMessages((prev) => [...prev, userMessage]);
     setInputValue("");
-    simulateBotResponse(userMessage.content);
+    setIsTyping(true);
+
+    try {
+      const response = await postFetch(
+        "/chat/query",
+        {
+          context: "website",
+          query: userText,
+        },
+        {
+          "Robert-Connect-Token": token,
+        }
+      );
+      console.log("Réponse du bot:", response);
+      if (response.status === 200) {
+        const botMessage: Message = {
+          id: (Date.now() + 1).toString(), // +1 pour éviter les doublons d'ID
+          type: "bot",
+          content: response.data.response,
+          timestamp: new Date(),
+        };
+        setMessages((prev) => [...prev, botMessage]);
+      } else {
+        // Gestion d'erreur - ajouter un message d'erreur du bot
+        const errorMessage: Message = {
+          id: (Date.now() + 1).toString(),
+          type: "bot",
+          content:
+            "Désolé, je n'ai pas pu traiter votre demande. Veuillez réessayer.",
+          timestamp: new Date(),
+        };
+        setMessages((prev) => [...prev, errorMessage]);
+      }
+    } catch (error) {
+      // Gestion d'erreur réseau/autre
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        type: "bot",
+        content:
+          "Une erreur s'est produite lors de la communication avec le serveur. Veuillez réessayer.",
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+      console.error("Erreur lors de l'envoi du message:", error);
+    } finally {
+      setIsTyping(false);
+    }
   };
 
   const handleNewChat = () => {
@@ -198,7 +207,7 @@ export default function ChatInterface() {
         id: "1",
         type: "bot",
         content:
-          "Bonjour ! Je suis Robert, votre assistant IA. Comment puis-je vous aider aujourd'hui ?",
+          "Nouvelle conversation démarrée ! Je suis Robert, votre assistant IA personnel. Vos conversations sont sauvegardées et vous avez accès à tous les paramètres. Comment puis-je vous aider ?",
         timestamp: new Date(),
       },
     ]);
@@ -240,169 +249,191 @@ export default function ChatInterface() {
     setUserPreferences(updated);
     localStorage.setItem("robert-ai-preferences", JSON.stringify(updated));
   };
-
   const formatTime = (date: Date) => {
     return date.toLocaleTimeString("fr-FR", {
       hour: "2-digit",
       minute: "2-digit",
     });
   };
-
   return (
-    <>
-      <Header />
-      <div className={`chat-interface ${showHistory ? "with-history" : ""}`}>
-        {/* Historique des conversations */}
-        <AnimatePresence>
-          {showHistory && (
-            <motion.div
-              initial={{ x: -300, opacity: 0 }}
-              animate={{ x: 0, opacity: 1 }}
-              exit={{ x: -300, opacity: 0 }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+    <div
+      className={`chat-interface fullscreen ${
+        showHistory ? "with-history" : ""
+      }`}
+    >
+      {/* Historique des conversations */}
+      <AnimatePresence>
+        {showHistory && (
+          <motion.div
+            initial={{ x: -300, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: -300, opacity: 0 }}
+            transition={{ type: "spring", damping: 25, stiffness: 200 }}
+          >
+            <ChatHistory
+              sessions={chatSessions}
+              onSelectSession={handleSelectSession}
+              onDeleteSession={handleDeleteSession}
+              onNewChat={handleNewChat}
+              currentSessionId={currentSessionId}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Interface de chat principale */}
+      <div className="chat-main">
+        {/* Header */}
+        <div className="chat-header">
+          <div className="header-left">
+            <button className="back-button" onClick={() => navigate(-1)}>
+              <ArrowLeft size={20} />
+            </button>
+            <button
+              className="history-toggle"
+              onClick={() => setShowHistory(!showHistory)}
             >
-              <ChatHistory
-                sessions={chatSessions}
-                onSelectSession={handleSelectSession}
-                onDeleteSession={handleDeleteSession}
-                onNewChat={handleNewChat}
-                currentSessionId={currentSessionId}
-              />
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* Interface de chat principale */}
-        <div className="chat-main">
-          {/* Header */}
-          <div className="chat-header">
-            <div className="header-left">
-              <button className="back-button" onClick={() => navigate(-1)}>
-                <ArrowLeft size={20} />
-              </button>
-              <button
-                className="history-toggle"
-                onClick={() => setShowHistory(!showHistory)}
-              >
-                <Menu size={20} />
-              </button>
-              <div className="chat-title">
-                <h2>Robert AI</h2>
-                <span className="status">En ligne</span>
-              </div>
-            </div>
-
-            <div className="header-actions">
-              <button
-                className="settings-button"
-                onClick={() => setShowSettings(true)}
-              >
-                <Settings size={20} />
-              </button>
-              <button className="more-button">
-                <MoreHorizontal size={20} />
-              </button>
+              <Menu size={20} />
+            </button>{" "}
+            <div className="chat-title">
+              <h2>Robert AI Pro</h2>
+              <span className="status">En ligne • Connecté</span>
             </div>
           </div>
 
-          {/* Messages */}
-          <div className="messages-container">
-            <AnimatePresence initial={false}>
-              {messages.map((message) => (
-                <motion.div
-                  key={message.id}
-                  initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.3 }}
-                  className={`message ${message.type}`}
-                >
-                  <div className="message-avatar">
-                    {message.type === "bot" ? (
-                      <Bot size={20} />
-                    ) : (
-                      <div
-                        className="user-avatar"
-                        style={{ backgroundColor: userPreferences.avatarColor }}
-                      >
-                        <User size={16} />
-                      </div>
-                    )}
-                  </div>
-                  <div className="message-content">
-                    <div className="message-header">
-                      <span className="message-sender">
-                        {message.type === "bot"
-                          ? "Robert AI"
-                          : userPreferences.username}
-                      </span>
-                      <span className="message-time">
-                        {formatTime(message.timestamp)}
-                      </span>
-                    </div>
-                    <div className="message-text">{message.content}</div>
-                  </div>
-                </motion.div>
-              ))}
-            </AnimatePresence>
-
-            {/* Indicateur de frappe */}
-            <AnimatePresence>
-              {isTyping && (
-                <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
-                  className="typing-indicator"
-                >
-                  <div className="message-avatar">
-                    <Bot size={20} />
-                  </div>
-                  <div className="typing-dots">
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            <div ref={messagesEndRef} />
-          </div>
-
-          {/* Input */}
-          <div className="chat-input-container">
-            <form onSubmit={handleSubmit} className="chat-input-form">
-              <input
-                ref={inputRef}
-                type="text"
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                placeholder="Tapez votre message..."
-                className="chat-input"
-                disabled={isTyping}
-              />
-              <motion.button
-                type="submit"
-                className="send-button"
-                disabled={!inputValue.trim() || isTyping}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Send size={18} />
-              </motion.button>
-            </form>
+          <div className="header-actions">
+            <button
+              className="settings-button"
+              onClick={() => setShowSettings(true)}
+            >
+              <Settings size={20} />
+            </button>
+            <button className="more-button">
+              <MoreHorizontal size={20} />
+            </button>
           </div>
         </div>
 
-        {/* Paramètres utilisateur */}
-        <UserSettings
-          isOpen={showSettings}
-          onClose={() => setShowSettings(false)}
-          preferences={userPreferences}
-          onUpdatePreferences={handleUpdatePreferences}
-        />
+        {/* Messages */}
+        <div className="messages-container">
+          <AnimatePresence initial={false}>
+            {messages.map((message) => (
+              <motion.div
+                key={message.id}
+                initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ duration: 0.3 }}
+                className={`message ${message.type}`}
+              >
+                <div className="message-avatar">
+                  {message.type === "bot" ? (
+                    <Bot size={20} />
+                  ) : (
+                    <div
+                      className="user-avatar"
+                      style={{ backgroundColor: userPreferences.avatarColor }}
+                    >
+                      <User size={16} />
+                    </div>
+                  )}
+                </div>
+                <div className="message-content">
+                  {" "}
+                  <div className="message-header">
+                    <span className="message-sender">
+                      {message.type === "bot"
+                        ? "Robert AI"
+                        : userPreferences.username}
+                    </span>
+                    <span className="message-time">
+                      {formatTime(message.timestamp)}
+                    </span>
+                  </div>{" "}
+                  <div className="message-text">
+                    {message.type === "bot" ? (
+                      <div className="markdown-content">
+                        <ReactMarkdown
+                          components={{
+                            a: ({ href, children }) => (
+                              <a
+                                href={href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                              >
+                                {children}
+                              </a>
+                            ),
+                          }}
+                        >
+                          {message.content}
+                        </ReactMarkdown>
+                      </div>
+                    ) : (
+                      message.content
+                    )}
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+
+          {/* Indicateur de frappe */}
+          <AnimatePresence>
+            {isTyping && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="typing-indicator"
+              >
+                <div className="message-avatar">
+                  <Bot size={20} />
+                </div>
+                <div className="typing-dots">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <div ref={messagesEndRef} />
+        </div>
+
+        {/* Input */}
+        <div className="chat-input-container">
+          <form onSubmit={handleSubmit} className="chat-input-form">
+            <input
+              ref={inputRef}
+              type="text"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              placeholder="Tapez votre message..."
+              className="chat-input"
+              disabled={isTyping}
+            />
+            <motion.button
+              type="submit"
+              className="send-button"
+              disabled={!inputValue.trim() || isTyping}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Send size={18} />
+            </motion.button>
+          </form>
+        </div>
       </div>
-    </>
+
+      {/* Paramètres utilisateur */}
+      <UserSettings
+        isOpen={showSettings}
+        onClose={() => setShowSettings(false)}
+        preferences={userPreferences}
+        onUpdatePreferences={handleUpdatePreferences}
+      />
+    </div>
   );
 }
