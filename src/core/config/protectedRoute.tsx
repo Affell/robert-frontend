@@ -1,15 +1,18 @@
 import { Outlet, Navigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 export default function ProtectedRoute() {
   const [isChecking, setIsChecking] = useState<boolean>(true);
   const { token, verifyToken, isAuthenticated, loading } = useAuth();
-
   useEffect(() => {
     const checkAuth = async () => {
       if (token) {
-        await verifyToken(token);
+        const isValid = await verifyToken(token);
+        if (!isValid) {
+          toast.error("Votre session a expiré, veuillez vous reconnecter");
+        }
       }
       setIsChecking(false);
     };

@@ -2,7 +2,6 @@ import { createContext, useContext, useState, useEffect } from "react";
 import type { ReactNode } from "react";
 import { getFetch, postFetch } from "../api/fetch";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -23,7 +22,6 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const savedToken = localStorage.getItem("authToken");
@@ -73,14 +71,19 @@ export function AuthProvider({ children }: AuthProviderProps) {
       } else {
         setIsAuthenticated(false);
         setLoading(false);
-        toast.error("Token invalide ou expiré");
-        navigate("/login");
+        // Ne pas rediriger automatiquement ici - laisser les routes protégées gérer ça
+        // Supprimer le token invalide du localStorage
+        localStorage.removeItem("authToken");
+        setToken(null);
         return false;
       }
     } catch (error) {
       console.error("Error verifying token:", error);
       setIsAuthenticated(false);
       setLoading(false);
+      // Supprimer le token en cas d'erreur
+      localStorage.removeItem("authToken");
+      setToken(null);
       return false;
     }
   };
