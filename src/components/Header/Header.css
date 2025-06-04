@@ -23,6 +23,18 @@
   color: var(--text-primary);
 }
 
+.logo-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: opacity 0.2s ease;
+}
+
+.logo-button:hover {
+  opacity: 0.8;
+}
+
 .logo-icon {
   color: var(--accent);
 }
