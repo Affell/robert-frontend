@@ -1,12 +1,11 @@
-import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Settings, X, Moon, Sun, Type, Palette, User } from 'lucide-react';
-import './UserSettings.css';
+import { motion, AnimatePresence } from "framer-motion";
+import { Settings, X, Moon, Sun, Type, Palette, User } from "lucide-react";
+import "./UserSettings.css";
 
 export interface UserPreferences {
-  theme: 'light' | 'dark' | 'auto';
-  fontSize: 'small' | 'medium' | 'large';
-  language: 'fr' | 'en';
+  theme: "light" | "dark" | "auto";
+  fontSize: "small" | "medium" | "large";
+  language: "fr" | "en";
   username: string;
   avatarColor: string;
 }
@@ -18,38 +17,49 @@ interface UserSettingsProps {
   onUpdatePreferences: (preferences: Partial<UserPreferences>) => void;
 }
 
-export const UserSettings: React.FC<UserSettingsProps> = ({
+export default function UserSettings({
   isOpen,
   onClose,
   preferences,
-  onUpdatePreferences
-}) => {
+  onUpdatePreferences,
+}: UserSettingsProps) {
   const avatarColors = [
-    '#f97316', '#3b82f6', '#10b981', '#8b5cf6',
-    '#f59e0b', '#ef4444', '#06b6d4', '#84cc16'
+    "#f97316",
+    "#3b82f6",
+    "#10b981",
+    "#8b5cf6",
+    "#f59e0b",
+    "#ef4444",
+    "#06b6d4",
+    "#84cc16",
   ];
 
-  const handleThemeChange = (theme: UserPreferences['theme']) => {
+  const handleThemeChange = (theme: UserPreferences["theme"]) => {
     onUpdatePreferences({ theme });
-    
+
     // Appliquer le thème immédiatement
-    if (theme === 'dark') {
-      document.documentElement.classList.add('dark-theme');
-    } else if (theme === 'light') {
-      document.documentElement.classList.remove('dark-theme');
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark-theme");
+    } else if (theme === "light") {
+      document.documentElement.classList.remove("dark-theme");
     } else {
       // Auto - détection du thème système
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      document.documentElement.classList.toggle('dark-theme', prefersDark);
+      const prefersDark = window.matchMedia(
+        "(prefers-color-scheme: dark)"
+      ).matches;
+      document.documentElement.classList.toggle("dark-theme", prefersDark);
     }
   };
 
-  const handleFontSizeChange = (fontSize: UserPreferences['fontSize']) => {
+  const handleFontSizeChange = (fontSize: UserPreferences["fontSize"]) => {
     onUpdatePreferences({ fontSize });
-    
+
     // Appliquer la taille de police
-    const sizes = { small: '14px', medium: '16px', large: '18px' };
-    document.documentElement.style.setProperty('--base-font-size', sizes[fontSize]);
+    const sizes = { small: "14px", medium: "16px", large: "18px" };
+    document.documentElement.style.setProperty(
+      "--base-font-size",
+      sizes[fontSize]
+    );
   };
 
   return (
@@ -63,7 +73,7 @@ export const UserSettings: React.FC<UserSettingsProps> = ({
             className="settings-overlay"
             onClick={onClose}
           />
-          
+
           <motion.div
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -87,13 +97,15 @@ export const UserSettings: React.FC<UserSettingsProps> = ({
                   <User size={16} />
                   Profil
                 </h3>
-                
+
                 <div className="setting-item">
                   <label>Nom d'utilisateur</label>
                   <input
                     type="text"
                     value={preferences.username}
-                    onChange={(e) => onUpdatePreferences({ username: e.target.value })}
+                    onChange={(e) =>
+                      onUpdatePreferences({ username: e.target.value })
+                    }
                     placeholder="Votre nom"
                     className="settings-input"
                   />
@@ -105,9 +117,13 @@ export const UserSettings: React.FC<UserSettingsProps> = ({
                     {avatarColors.map((color) => (
                       <button
                         key={color}
-                        className={`avatar-color ${preferences.avatarColor === color ? 'active' : ''}`}
+                        className={`avatar-color ${
+                          preferences.avatarColor === color ? "active" : ""
+                        }`}
                         style={{ backgroundColor: color }}
-                        onClick={() => onUpdatePreferences({ avatarColor: color })}
+                        onClick={() =>
+                          onUpdatePreferences({ avatarColor: color })
+                        }
                       />
                     ))}
                   </div>
@@ -120,27 +136,33 @@ export const UserSettings: React.FC<UserSettingsProps> = ({
                   <Palette size={16} />
                   Apparence
                 </h3>
-                
+
                 <div className="setting-item">
                   <label>Thème</label>
                   <div className="theme-options">
                     <button
-                      className={`theme-btn ${preferences.theme === 'light' ? 'active' : ''}`}
-                      onClick={() => handleThemeChange('light')}
+                      className={`theme-btn ${
+                        preferences.theme === "light" ? "active" : ""
+                      }`}
+                      onClick={() => handleThemeChange("light")}
                     >
                       <Sun size={16} />
                       Clair
                     </button>
                     <button
-                      className={`theme-btn ${preferences.theme === 'dark' ? 'active' : ''}`}
-                      onClick={() => handleThemeChange('dark')}
+                      className={`theme-btn ${
+                        preferences.theme === "dark" ? "active" : ""
+                      }`}
+                      onClick={() => handleThemeChange("dark")}
                     >
                       <Moon size={16} />
                       Sombre
                     </button>
                     <button
-                      className={`theme-btn ${preferences.theme === 'auto' ? 'active' : ''}`}
-                      onClick={() => handleThemeChange('auto')}
+                      className={`theme-btn ${
+                        preferences.theme === "auto" ? "active" : ""
+                      }`}
+                      onClick={() => handleThemeChange("auto")}
                     >
                       <Settings size={16} />
                       Auto
@@ -152,22 +174,28 @@ export const UserSettings: React.FC<UserSettingsProps> = ({
                   <label>Taille du texte</label>
                   <div className="font-size-options">
                     <button
-                      className={`font-btn ${preferences.fontSize === 'small' ? 'active' : ''}`}
-                      onClick={() => handleFontSizeChange('small')}
+                      className={`font-btn ${
+                        preferences.fontSize === "small" ? "active" : ""
+                      }`}
+                      onClick={() => handleFontSizeChange("small")}
                     >
                       <Type size={14} />
                       Petit
                     </button>
                     <button
-                      className={`font-btn ${preferences.fontSize === 'medium' ? 'active' : ''}`}
-                      onClick={() => handleFontSizeChange('medium')}
+                      className={`font-btn ${
+                        preferences.fontSize === "medium" ? "active" : ""
+                      }`}
+                      onClick={() => handleFontSizeChange("medium")}
                     >
                       <Type size={16} />
                       Normal
                     </button>
                     <button
-                      className={`font-btn ${preferences.fontSize === 'large' ? 'active' : ''}`}
-                      onClick={() => handleFontSizeChange('large')}
+                      className={`font-btn ${
+                        preferences.fontSize === "large" ? "active" : ""
+                      }`}
+                      onClick={() => handleFontSizeChange("large")}
                     >
                       <Type size={18} />
                       Grand
@@ -182,7 +210,11 @@ export const UserSettings: React.FC<UserSettingsProps> = ({
                 <div className="setting-item">
                   <select
                     value={preferences.language}
-                    onChange={(e) => onUpdatePreferences({ language: e.target.value as 'fr' | 'en' })}
+                    onChange={(e) =>
+                      onUpdatePreferences({
+                        language: e.target.value as "fr" | "en",
+                      })
+                    }
                     className="settings-select"
                   >
                     <option value="fr">Français</option>
@@ -202,4 +234,4 @@ export const UserSettings: React.FC<UserSettingsProps> = ({
       )}
     </AnimatePresence>
   );
-};
+}

@@ -1,42 +1,21 @@
-import { useState } from 'react'
-import { Header, ChatInterface, Hero, Footer, About, Pricing } from './components'
-import './App.css'
+import "./App.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Hero from "./views/Hero/Hero";
+import ChatInterface from "./views/Chat/ChatInterface";
+import About from "./views/About/About";
+import Pricing from "./views/Pricing/Pricing";
+import Account from "./views/Account/Account";
 
-type AppView = 'home' | 'chat' | 'about' | 'pricing'
-
-function App() {
-  const [currentView, setCurrentView] = useState<AppView>('home')
-
-  const renderView = () => {
-    switch (currentView) {
-      case 'home':
-        return <Hero onStartChat={() => setCurrentView('chat')} />
-      case 'chat':
-        return <ChatInterface onBack={() => setCurrentView('home')} />
-      case 'about':
-        return <About onBack={() => setCurrentView('home')} />
-      case 'pricing':
-        return <Pricing onStartChat={() => setCurrentView('chat')} />
-      default:
-        return <Hero onStartChat={() => setCurrentView('chat')} />
-    }
-  }
-
+export default function App() {
   return (
-    <div className="app">
-      {currentView !== 'chat' && (
-        <Header 
-          onChatToggle={() => setCurrentView('chat')} 
-          onAboutClick={() => setCurrentView('about')}
-          onPricingClick={() => setCurrentView('pricing')}
-        />
-      )}
-      <main>
-        {renderView()}
-      </main>
-      {(currentView === 'home' || currentView === 'pricing') && <Footer />}
-    </div>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Hero />} />
+        <Route path="/chat" element={<ChatInterface />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/pricing" element={<Pricing />} />
+        <Route path="/account" element={<Account />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
-
-export default App
