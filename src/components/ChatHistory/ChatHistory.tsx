@@ -1,6 +1,6 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageSquare, Trash2, Search } from "lucide-react";
+import { Trash2, Search, Plus } from "lucide-react";
 import "./ChatHistory.css";
 
 export interface ChatSession {
@@ -48,24 +48,23 @@ export default function ChatHistory({
 
   return (
     <div className="chat-history">
+      {" "}
       <div className="chat-history-header">
         <button className="new-chat-btn" onClick={onNewChat}>
-          <MessageSquare size={18} />
+          <Plus size={16} />
           Nouvelle conversation
-        </button>
-
+        </button>{" "}
         <div className="search-container">
-          <Search size={16} />
+          <Search size={14} />
           <input
             type="text"
-            placeholder="Rechercher dans l'historique..."
+            placeholder="Rechercher..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="search-input"
           />
         </div>
       </div>
-
       <div className="chat-sessions">
         <AnimatePresence>
           {filteredSessions.map((session) => (
@@ -80,6 +79,7 @@ export default function ChatHistory({
               }`}
               onClick={() => onSelectSession(session.id)}
             >
+              {" "}
               <div className="session-content">
                 <h4 className="session-title">{session.title}</h4>
                 <p className="session-preview">{session.preview}</p>
@@ -87,12 +87,8 @@ export default function ChatHistory({
                   <span className="session-time">
                     {formatTimestamp(session.timestamp)}
                   </span>
-                  <span className="session-count">
-                    {session.messageCount} messages
-                  </span>
                 </div>
               </div>
-
               <button
                 className="delete-session-btn"
                 onClick={(e) => {

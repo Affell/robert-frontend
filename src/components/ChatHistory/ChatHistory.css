@@ -1,0 +1,189 @@
+.chat-history {
+  width: 100%;
+  height: 100%;
+  background: #171717;
+  border-right: 1px solid #303030;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.chat-history-header {
+  padding: 12px;
+  background: #171717;
+  border-bottom: none;
+}
+
+.new-chat-btn {
+  width: 100%;
+  padding: 12px;
+  background: transparent;
+  color: #ececec;
+  border: 1px solid #565656;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.new-chat-btn:hover {
+  background: #2d2d2d;
+  border-color: #676767;
+}
+
+.search-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.search-container svg {
+  position: absolute;
+  left: 12px;
+  color: #8e8ea0;
+  z-index: 1;
+}
+
+.search-input {
+  width: 100%;
+  padding: 8px 12px 8px 36px;
+  border: none;
+  border-radius: 6px;
+  background: #2d2d2d;
+  color: #ececec;
+  font-size: 14px;
+  transition: background 0.2s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  background: #3a3a3a;
+}
+
+.search-input::placeholder {
+  color: #8e8ea0;
+}
+
+.chat-sessions {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.chat-session {
+  display: flex;
+  align-items: flex-start;
+  padding: 12px;
+  margin-bottom: 2px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  border: none;
+  background: transparent;
+  position: relative;
+}
+
+.chat-session:hover {
+  background: #2d2d2d;
+}
+
+.chat-session.active {
+  background: #2d2d2d;
+}
+
+.session-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.session-title {
+  font-size: 14px;
+  font-weight: 400;
+  color: #ececec;
+  margin: 0 0 4px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.3;
+}
+
+.session-preview {
+  font-size: 12px;
+  color: #8e8ea0;
+  margin: 0 0 6px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  line-height: 1.2;
+}
+
+.session-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  color: #565656;
+}
+
+.delete-session-btn {
+  background: none;
+  border: none;
+  color: #8e8ea0;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+  opacity: 0;
+  margin-left: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chat-session:hover .delete-session-btn {
+  opacity: 1;
+}
+
+.delete-session-btn:hover {
+  background: #ef4444;
+  color: white;
+}
+
+.no-sessions {
+  text-align: center;
+  padding: 32px 16px;
+  color: #8e8ea0;
+  font-size: 14px;
+}
+
+/* Scrollbar personnalisée pour ChatGPT style */
+.chat-sessions::-webkit-scrollbar {
+  width: 4px;
+}
+
+.chat-sessions::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chat-sessions::-webkit-scrollbar-thumb {
+  background: #565656;
+  border-radius: 2px;
+}
+
+.chat-sessions::-webkit-scrollbar-thumb:hover {
+  background: #676767;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .chat-history {
+    width: 100%;
+  }
+}
