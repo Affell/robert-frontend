@@ -12,6 +12,7 @@ import {
 import "./About.css";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header/Header";
+import Footer from "../../components/Footer/Footer";
 
 export default function About() {
   const features = [
@@ -214,6 +215,7 @@ export default function About() {
           </motion.div>
         </div>
       </motion.div>
+      <Footer />
     </>
   );
 }

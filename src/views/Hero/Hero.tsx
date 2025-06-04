@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import "./Hero.css";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header/Header";
+import Footer from "../../components/Footer/Footer";
+import { ToastContainer } from "react-toastify";
 
 export default function Hero() {
   const navigate = useNavigate();
@@ -10,6 +12,7 @@ export default function Hero() {
   return (
     <>
       <Header />
+      <ToastContainer />
       <div className="hero">
         <div className="container">
           {/* Section principale */}
@@ -154,6 +157,7 @@ export default function Hero() {
           </motion.div>
         </div>
       </div>
+      <Footer />
     </>
   );
 }

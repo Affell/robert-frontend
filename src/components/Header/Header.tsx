@@ -1,11 +1,32 @@
-import { MessageSquare, Menu, X, User } from "lucide-react";
-import { useState } from "react";
+import { MessageSquare, Menu, X, User, ChevronDown } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
 import "./Header.css";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../core/auth/AuthContext";
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isAccountMenuOpen, setIsAccountMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const dropdownRef = useRef<HTMLDivElement>(null);
+  const { logout, isAuthenticated } = useAuth();
+
+  // Fermer le dropdown quand on clique en dehors
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(event.target as Node)
+      ) {
+        setIsAccountMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   return (
     <header className="header">
@@ -43,13 +64,55 @@ export default function Header() {
           </nav>{" "}
           {/* Actions */}
           <div className="header-actions">
-            <button
-              className="btn btn-secondary"
-              onClick={() => navigate("/account")}
-            >
-              <User size={16} />
-              Mon compte
-            </button>
+            {" "}
+            <div className="account-dropdown" ref={dropdownRef}>
+              <button
+                className="btn btn-secondary"
+                onClick={() => setIsAccountMenuOpen(!isAccountMenuOpen)}
+                aria-expanded={isAccountMenuOpen}
+                aria-haspopup="menu"
+              >
+                <User size={16} />
+                <span>Mon compte</span>
+                <ChevronDown size={16} />
+              </button>
+              {isAccountMenuOpen && (
+                <div className="dropdown-menu">
+                  <button
+                    className="dropdown-item"
+                    onClick={() => {
+                      navigate("/profile");
+                      setIsAccountMenuOpen(false);
+                    }}
+                  >
+                    <User size={16} />
+                    Profil
+                  </button>
+                  {!isAuthenticated && (
+                    <button
+                      className="dropdown-item"
+                      onClick={() => {
+                        navigate("/login");
+                        setIsAccountMenuOpen(false);
+                      }}
+                    >
+                      Connexion
+                    </button>
+                  )}
+                  {isAuthenticated && (
+                    <button
+                      className="dropdown-item"
+                      onClick={() => {
+                        logout();
+                        setIsAccountMenuOpen(false);
+                      }}
+                    >
+                      Déconnexion
+                    </button>
+                  )}
+                </div>
+              )}{" "}
+            </div>
             <button
               className="btn btn-primary"
               onClick={() => navigate("/chat")}
@@ -57,7 +120,6 @@ export default function Header() {
               <MessageSquare size={16} />
               Essayer Robert
             </button>
-
             {/* Menu mobile */}
             <button
               className="mobile-menu-btn"

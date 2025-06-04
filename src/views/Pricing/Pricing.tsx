@@ -2,6 +2,7 @@ import { Check, Star, Zap, Crown, Rocket } from "lucide-react";
 import { motion } from "framer-motion";
 import "./Pricing.css";
 import Header from "../../components/Header/Header";
+import Footer from "../../components/Footer/Footer";
 
 interface PricingTier {
   id: string;
@@ -271,6 +272,7 @@ export default function Pricing({ onStartChat }: PricingProps) {
           </motion.div>
         </div>
       </div>
+      <Footer />
     </>
   );
 }
