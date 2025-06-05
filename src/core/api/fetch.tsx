@@ -64,3 +64,33 @@ export async function postFetch(route: string, data: any, headers?: any) {
     return { status: 500, data: null, error: err.message };
   }
 }
+
+export async function deleteFetch(route: string, headers?: any) {
+  try {
+    const response = await fetch(`${Config.Urls.API}${route}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        ...headers,
+      },
+    });
+
+    // Check if response is JSON
+    const contentType = response.headers.get("Content-Type") || "";
+
+    if (contentType.includes("application/json")) {
+      const responseData = await response.json();
+      return { status: response.status, data: responseData };
+    } else {
+      // Handle non-JSON response
+      return {
+        status: response.status,
+        data: null,
+        error: "Received non-JSON response from server",
+      };
+    }
+  } catch (err: any) {
+    console.error("Delete fetch error:", err);
+    return { status: 500, data: null, error: err.message };
+  }
+}

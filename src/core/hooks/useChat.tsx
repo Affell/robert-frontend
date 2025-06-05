@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { postFetch } from "../api/fetch";
+import { useChatSessions } from "./useChatSessions";
 
 export interface Message {
   id: string;
@@ -12,12 +13,16 @@ interface UseChatProps {
   isAuthenticated: boolean;
   token?: string;
   initialMessage?: string;
+  sessionId?: number | null;
+  onSessionCreated?: (sessionId: number) => void; // Callback pour notifier la création de session
 }
 
 export const useChat = ({
   isAuthenticated,
   token,
   initialMessage,
+  sessionId,
+  onSessionCreated,
 }: UseChatProps) => {
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -33,7 +38,70 @@ export const useChat = ({
   ]);
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
+  const [justCreatedSession, setJustCreatedSession] = useState(false); // Flag pour éviter le rechargement après création
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const {
+    addMessageToSession,
+    currentMessages,
+    fetchSessionMessages,
+    createSession,
+  } = useChatSessions({
+    token,
+    isAuthenticated,
+  });
+
+  // Convertir les messages de session en format Message local
+  const convertSessionMessagesToLocal = () => {
+    const convertedMessages: Message[] = [];
+
+    currentMessages.forEach((msg) => {
+      // Message utilisateur
+      convertedMessages.push({
+        id: `user-${msg.id}`,
+        type: "user",
+        content: msg.user_message,
+        timestamp: new Date(msg.created_at),
+      });
+
+      // Réponse du bot
+      convertedMessages.push({
+        id: `bot-${msg.id}`,
+        type: "bot",
+        content: msg.bot_response,
+        timestamp: new Date(msg.created_at),
+      });
+    });
+
+    return convertedMessages;
+  }; // Charger les messages de session si un sessionId est fourni
+  useEffect(() => {
+    if (isAuthenticated && token && sessionId && !justCreatedSession) {
+      fetchSessionMessages(sessionId);
+    } else if (isAuthenticated && sessionId === null) {
+      // Nouvelle session - remettre les messages par défaut
+      setMessages([
+        {
+          id: "1",
+          type: "bot",
+          content:
+            "Bienvenue dans Robert AI ! Comment puis-je vous aider aujourd'hui ?",
+          timestamp: new Date(),
+        },
+      ]);
+    }
+
+    // Réinitialiser le flag après le premier effet
+    if (justCreatedSession) {
+      setJustCreatedSession(false);
+    }
+  }, [sessionId, isAuthenticated, token, justCreatedSession]);
+
+  // Mettre à jour les messages locaux quand les messages de session changent
+  useEffect(() => {
+    if (isAuthenticated && currentMessages.length > 0) {
+      setMessages(convertSessionMessagesToLocal());
+    }
+  }, [currentMessages, isAuthenticated]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -42,7 +110,6 @@ export const useChat = ({
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
-
   const sendMessage = async (userText: string) => {
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -76,7 +143,29 @@ export const useChat = ({
             content: response.data.response,
             timestamp: new Date(),
           };
-          setMessages((prev) => [...prev, botMessage]);
+          setMessages((prev) => [...prev, botMessage]); // Créer une session automatiquement si pas de session active
+          let currentSession = sessionId;
+          if (isAuthenticated && !sessionId) {
+            const sessionTitle =
+              userText.length > 50
+                ? userText.substring(0, 47) + "..."
+                : userText;
+            const newSessionId = await createSession(sessionTitle);
+            if (newSessionId && onSessionCreated) {
+              currentSession = newSessionId;
+              setJustCreatedSession(true); // Marquer qu'on vient de créer une session
+              onSessionCreated(newSessionId);
+            }
+          }
+
+          // Sauvegarder dans l'historique si on a un sessionId
+          if (currentSession) {
+            await addMessageToSession(
+              currentSession,
+              userText,
+              response.data.response
+            );
+          }
         } else {
           throw new Error("Erreur API");
         }
@@ -120,7 +209,6 @@ export const useChat = ({
     if (!inputValue.trim() || isTyping) return;
     sendMessage(inputValue.trim());
   };
-
   return {
     messages,
     setMessages,

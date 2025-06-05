@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { useChat } from "../../core/hooks/useChat";
 import { useAuth } from "../../core/auth/AuthContext";
 import ChatHistory, { type ChatSession } from "../ChatHistory/ChatHistory";
+import ChatHistoryAPI from "../ChatHistoryAPI/ChatHistoryAPI";
 import UserSettings, {
   type UserPreferences,
 } from "../UserSettings/UserSettings";
@@ -33,8 +34,10 @@ const formatTime = (date: Date) => {
 
 export default function ChatComponent({ isAuthenticated }: ChatComponentProps) {
   const navigate = useNavigate();
-  const { token } = useAuth();
-
+  const { token } = useAuth(); // États pour les fonctionnalités avancées (seulement si connecté)
+  const [showHistory, setShowHistory] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [currentSessionId, setCurrentSessionId] = useState<number | null>(null);
   const {
     messages,
     inputValue,
@@ -45,12 +48,12 @@ export default function ChatComponent({ isAuthenticated }: ChatComponentProps) {
   } = useChat({
     isAuthenticated,
     token: token || undefined,
+    sessionId: currentSessionId, // Utiliser la session courante
+    onSessionCreated: (newSessionId) => setCurrentSessionId(newSessionId), // Callback pour la création de session
   });
 
-  // États pour les fonctionnalités avancées (seulement si connecté)
-  const [showHistory, setShowHistory] = useState(false);
-  const [showSettings, setShowSettings] = useState(false);
-  const [currentSessionId, setCurrentSessionId] = useState("default");
+  // États pour localStorage (mode non connecté uniquement)
+  const [localSessionId, setLocalSessionId] = useState("default");
   const [chatSessions, setChatSessions] = useState<ChatSession[]>([
     {
       id: "default",
@@ -66,9 +69,23 @@ export default function ChatComponent({ isAuthenticated }: ChatComponentProps) {
     language: "fr",
     username: "Utilisateur",
     avatarColor: "#f97316",
-  });
+  }); // Gestionnaires pour le mode API (utilisateurs connectés)
+  const handleNewChatAPI = async () => {
+    // D'abord, effacer la session courante pour éviter les conflits
+    setCurrentSessionId(null);
+    setShowHistory(false);
 
-  const handleNewChat = () => {
+    // Créer une nouvelle session seulement au premier message
+    // Pour l'instant, on met juste sessionId à null pour une nouvelle conversation
+  };
+
+  const handleSelectSessionAPI = (sessionId: number) => {
+    setCurrentSessionId(sessionId);
+    setShowHistory(false);
+  };
+
+  // Gestionnaires pour le mode localStorage (utilisateurs non connectés)
+  const handleNewChatLocal = () => {
     const newSessionId = Date.now().toString();
     const newSession: ChatSession = {
       id: newSessionId,
@@ -79,23 +96,22 @@ export default function ChatComponent({ isAuthenticated }: ChatComponentProps) {
     };
 
     setChatSessions((prev) => [newSession, ...prev]);
-    setCurrentSessionId(newSessionId);
+    setLocalSessionId(newSessionId);
     setShowHistory(false);
   };
 
-  const handleSelectSession = (sessionId: string) => {
-    setCurrentSessionId(sessionId);
+  const handleSelectSessionLocal = (sessionId: string) => {
+    setLocalSessionId(sessionId);
     setShowHistory(false);
   };
 
-  const handleDeleteSession = (sessionId: string) => {
-    if (sessionId === currentSessionId && chatSessions.length > 1) {
+  const handleDeleteSessionLocal = (sessionId: string) => {
+    if (sessionId === localSessionId && chatSessions.length > 1) {
       const otherSession = chatSessions.find((s) => s.id !== sessionId);
       if (otherSession) {
-        setCurrentSessionId(otherSession.id);
+        setLocalSessionId(otherSession.id);
       }
     }
-
     setChatSessions((prev) => {
       const updated = prev.filter((s) => s.id !== sessionId);
       localStorage.setItem("robert-ai-sessions", JSON.stringify(updated));
@@ -118,6 +134,7 @@ export default function ChatComponent({ isAuthenticated }: ChatComponentProps) {
           isAuthenticated ? "authenticated" : "guest"
         } ${showHistory ? "with-history" : ""}`}
       >
+        {" "}
         {/* Historique des conversations (seulement si connecté) */}
         {isAuthenticated && (
           <AnimatePresence>
@@ -128,36 +145,55 @@ export default function ChatComponent({ isAuthenticated }: ChatComponentProps) {
                 exit={{ x: -300, opacity: 0 }}
                 transition={{ type: "spring", damping: 25, stiffness: 200 }}
               >
-                <ChatHistory
-                  sessions={chatSessions}
-                  onSelectSession={handleSelectSession}
-                  onDeleteSession={handleDeleteSession}
-                  onNewChat={handleNewChat}
+                {" "}
+                <ChatHistoryAPI
+                  token={token || undefined}
+                  isAuthenticated={isAuthenticated}
                   currentSessionId={currentSessionId}
+                  onSelectSession={handleSelectSessionAPI}
+                  onNewChat={handleNewChatAPI}
                 />
               </motion.div>
             )}
           </AnimatePresence>
         )}
-
+        {/* Historique localStorage pour les utilisateurs non connectés */}
+        {!isAuthenticated && (
+          <AnimatePresence>
+            {showHistory && (
+              <motion.div
+                initial={{ x: -300, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                exit={{ x: -300, opacity: 0 }}
+                transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              >
+                {" "}
+                <ChatHistory
+                  sessions={chatSessions}
+                  onSelectSession={handleSelectSessionLocal}
+                  onDeleteSession={handleDeleteSessionLocal}
+                  onNewChat={handleNewChatLocal}
+                  currentSessionId={localSessionId}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+        )}
         {/* Interface de chat principale */}
         <div className="chat-main">
           {/* Header */}
           <div className="chat-header">
             <div className="header-left">
+              {" "}
               <button className="back-button" onClick={() => navigate(-1)}>
                 <ArrowLeft size={20} />
               </button>
-
-              {isAuthenticated && (
-                <button
-                  className="history-toggle"
-                  onClick={() => setShowHistory(!showHistory)}
-                >
-                  <Menu size={20} />
-                </button>
-              )}
-
+              <button
+                className="history-toggle"
+                onClick={() => setShowHistory(!showHistory)}
+              >
+                <Menu size={20} />
+              </button>
               <div className="chat-title">
                 <h2>
                   {isAuthenticated
@@ -323,7 +359,6 @@ export default function ChatComponent({ isAuthenticated }: ChatComponentProps) {
             )}
           </div>
         </div>
-
         {/* Paramètres utilisateur (seulement si connecté) */}
         {isAuthenticated && (
           <UserSettings
