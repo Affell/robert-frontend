@@ -58,16 +58,18 @@ export default function Header() {
               onClick={() => navigate("/about")}
             >
               À propos
-            </button>
-            <button
+            </button>            <button
               className="nav-link nav-button"
               onClick={() => navigate("/pricing")}
             >
               Tarifs
             </button>
-            <a href="#contact" className="nav-link">
-              Contact
-            </a>
+            <button
+              className="nav-link nav-button"
+              onClick={() => navigate("/help")}
+            >
+              Aide
+            </button>
           </nav>{" "}
           {/* Actions */}
           <div className="header-actions">
@@ -155,8 +157,7 @@ export default function Header() {
               }}
             >
               À propos
-            </button>
-            <button
+            </button>            <button
               className="nav-link nav-button"
               onClick={() => {
                 navigate("/pricing");
@@ -165,9 +166,15 @@ export default function Header() {
             >
               Tarifs
             </button>
-            <a href="#contact" className="nav-link">
-              Contact
-            </a>
+            <button
+              className="nav-link nav-button"
+              onClick={() => {
+                navigate("/help");
+                setIsMobileMenuOpen(false);
+              }}
+            >
+              Aide
+            </button>
           </nav>
         )}
       </div>

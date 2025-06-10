@@ -6,19 +6,20 @@ import About from "./views/About/About";
 import Pricing from "./views/Pricing/Pricing";
 import Account from "./views/Connexion/Connexion";
 import Profile from "./views/Profile/Profile";
+import Help from "./views/Help/Help";
 import { AuthProvider } from "./core/auth/AuthContext";
 import ProtectedRoute from "./core/config/protectedRoute";
 
 export default function App() {
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <Routes>
+      <AuthProvider>        <Routes>
           {/* Routes publiques */}
           <Route path="/" element={<Hero />} />
           <Route path="/chat" element={<ChatInterface />} />
           <Route path="/about" element={<About />} />
           <Route path="/pricing" element={<Pricing />} />
+          <Route path="/help" element={<Help />} />
           <Route path="/login" element={<Account />} />
           {/* Routes protégées */}
           <Route element={<ProtectedRoute />}>
