@@ -130,6 +130,7 @@ export const useChat = ({
           {
             context: "website",
             query: userText,
+            session_id: sessionId || undefined,
           },
           {
             "Robert-Connect-Token": token,
