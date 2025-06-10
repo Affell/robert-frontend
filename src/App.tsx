@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Hero from "./views/Hero/Hero";
 import ChatInterface from "./views/Chat/ChatInterface";
 import About from "./views/About/About";
+import Features from "./views/Features/Features";
 import Pricing from "./views/Pricing/Pricing";
 import Account from "./views/Connexion/Connexion";
 import Profile from "./views/Profile/Profile";
@@ -17,6 +18,7 @@ export default function App() {
           {/* Routes publiques */}
           <Route path="/" element={<Hero />} />
           <Route path="/chat" element={<ChatInterface />} />
+          <Route path="/features" element={<Features />} />
           <Route path="/about" element={<About />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/help" element={<Help />} />
