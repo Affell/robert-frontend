@@ -1,4 +1,11 @@
-import { MessageSquare, Menu, X, User, ChevronDown } from "lucide-react";
+import {
+  MessageSquare,
+  Menu,
+  X,
+  User,
+  ChevronDown,
+  MessageCircle,
+} from "lucide-react";
 import { useState, useEffect, useRef } from "react";
 import "./Header.css";
 import { useNavigate } from "react-router-dom";
@@ -112,13 +119,17 @@ export default function Header() {
                   )}
                 </div>
               )}{" "}
-            </div>
+            </div>{" "}
             <button
               className="btn btn-primary"
               onClick={() => navigate("/chat")}
             >
-              <MessageSquare size={16} />
-              Essayer Robert
+              {isAuthenticated ? (
+                <MessageCircle size={16} />
+              ) : (
+                <MessageSquare size={16} />
+              )}
+              {isAuthenticated ? "Mes chats" : "Essayer Robert"}
             </button>
             {/* Menu mobile */}
             <button
