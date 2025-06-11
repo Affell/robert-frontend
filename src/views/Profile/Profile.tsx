@@ -3,8 +3,6 @@ import {
   User,
   Mail,
   MessageSquare,
-  Clock,
-  TrendingUp,
   Calendar,
   Edit3,
   Save,
@@ -58,8 +56,6 @@ export default function Profile() {
           sessionDate.getFullYear() === currentDate.getFullYear()
         );
       }).length || 0,
-    averageSessionTime: "12 min", // À implémenter avec de vraies données
-    favoriteTopics: ["Développement", "IA", "Tech"], // À implémenter avec de vraies données
   };
 
   // Formatage des dates pour l'affichage
@@ -348,28 +344,9 @@ export default function Profile() {
                   <h3>{stats.sessionsThisMonth}</h3>
                   <p>Sessions ce mois</p>
                 </div>
-
-                <div className="stat-card">
-                  <Clock size={24} />
-                  <h3>{stats.averageSessionTime}</h3>
-                  <p>Temps moyen/session</p>
-                </div>
-
-                <div className="stat-card">
-                  <TrendingUp size={24} />
-                  <h3>{stats.favoriteTopics.length}</h3>
-                  <p>Sujets favoris</p>
-                </div>
               </div>{" "}
               <div className="favorite-topics">
                 <h3>Sujets de discussion favoris</h3>
-                <div className="topics-list">
-                  {stats.favoriteTopics.map((topic, index) => (
-                    <span key={index} className="topic-tag">
-                      {topic}
-                    </span>
-                  ))}
-                </div>
               </div>
             </div>
             {/* Historique des conversations */}

@@ -1,24 +1,13 @@
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  Send,
-  Bot,
-  User,
-  ArrowLeft,
-  Menu,
-  Settings,
-  MoreHorizontal,
-} from "lucide-react";
+import { Send, Bot, User, House, Menu } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { useNavigate } from "react-router-dom";
 import { useChat } from "../../core/hooks/useChat";
 import { useAuth } from "../../core/auth/AuthContext";
 import ChatHistory, { type ChatSession } from "../ChatHistory/ChatHistory";
 import ChatHistoryAPI from "../ChatHistoryAPI/ChatHistoryAPI";
-import UserSettings, {
-  type UserPreferences,
-} from "../UserSettings/UserSettings";
 import Header from "../Header/Header";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./ChatComponent.css";
 
 interface ChatComponentProps {
@@ -36,8 +25,68 @@ export default function ChatComponent({ isAuthenticated }: ChatComponentProps) {
   const navigate = useNavigate();
   const { token } = useAuth(); // États pour les fonctionnalités avancées (seulement si connecté)
   const [showHistory, setShowHistory] = useState(false);
-  const [showSettings, setShowSettings] = useState(false);
   const [currentSessionId, setCurrentSessionId] = useState<number | null>(null);
+
+  // Gestion des gestes tactiles pour l'offcanvas
+  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const [touchEnd, setTouchEnd] = useState<number | null>(null);
+
+  // Distance minimale pour considérer un swipe
+  const minSwipeDistance = 50;
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+
+    // Fermer l'offcanvas avec un swipe vers la gauche
+    if (isLeftSwipe && showHistory) {
+      setShowHistory(false);
+    }
+  };
+
+  // Fermeture avec Escape
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape" && showHistory) {
+        setShowHistory(false);
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [showHistory]);
+
+  // Gestion de l'accessibilité et du focus
+  useEffect(() => {
+    if (showHistory) {
+      // Bloquer le scroll du body
+      document.body.style.overflow = "hidden";
+      // Focus sur l'offcanvas pour l'accessibilité
+      const sidebar = document.querySelector(".offcanvas-sidebar");
+      if (sidebar) {
+        (sidebar as HTMLElement).setAttribute("tabindex", "-1");
+        (sidebar as HTMLElement).focus();
+      }
+    } else {
+      // Restaurer le scroll
+      document.body.style.overflow = "unset";
+    }
+
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [showHistory]);
   const {
     messages,
     inputValue,
@@ -63,13 +112,6 @@ export default function ChatComponent({ isAuthenticated }: ChatComponentProps) {
       preview: "Bonjour ! Je suis Robert, votre assistant IA...",
     },
   ]);
-  const [userPreferences, setUserPreferences] = useState<UserPreferences>({
-    theme: "light",
-    fontSize: "medium",
-    language: "fr",
-    username: "Utilisateur",
-    avatarColor: "#f97316",
-  }); // Gestionnaires pour le mode API (utilisateurs connectés)
   const handleNewChatAPI = async () => {
     // D'abord, effacer la session courante pour éviter les conflits
     setCurrentSessionId(null);
@@ -118,13 +160,6 @@ export default function ChatComponent({ isAuthenticated }: ChatComponentProps) {
       return updated;
     });
   };
-
-  const handleUpdatePreferences = (newPrefs: Partial<UserPreferences>) => {
-    const updated = { ...userPreferences, ...newPrefs };
-    setUserPreferences(updated);
-    localStorage.setItem("robert-ai-preferences", JSON.stringify(updated));
-  };
-
   return (
     <>
       {!isAuthenticated && <Header />}
@@ -132,68 +167,59 @@ export default function ChatComponent({ isAuthenticated }: ChatComponentProps) {
       <div
         className={`chat-component ${
           isAuthenticated ? "authenticated" : "guest"
-        } ${showHistory ? "with-history" : ""}`}
+        }`}
       >
         {" "}
-        {/* Historique des conversations (seulement si connecté) */}
-        {isAuthenticated && (
-          <AnimatePresence>
-            {showHistory && (
-              <motion.div
-                initial={{ x: -300, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                exit={{ x: -300, opacity: 0 }}
-                transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              >
-                {" "}
-                <ChatHistoryAPI
-                  token={token || undefined}
-                  isAuthenticated={isAuthenticated}
-                  currentSessionId={currentSessionId}
-                  onSelectSession={handleSelectSessionAPI}
-                  onNewChat={handleNewChatAPI}
-                />
-              </motion.div>
-            )}
-          </AnimatePresence>
-        )}
-        {/* Historique localStorage pour les utilisateurs non connectés */}
-        {!isAuthenticated && (
-          <AnimatePresence>
-            {showHistory && (
-              <motion.div
-                initial={{ x: -300, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                exit={{ x: -300, opacity: 0 }}
-                transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              >
-                {" "}
-                <ChatHistory
-                  sessions={chatSessions}
-                  onSelectSession={handleSelectSessionLocal}
-                  onDeleteSession={handleDeleteSessionLocal}
-                  onNewChat={handleNewChatLocal}
-                  currentSessionId={localSessionId}
-                />
-              </motion.div>
-            )}
-          </AnimatePresence>
-        )}
+        {/* Overlay avec gestion d'état moderne */}
+        {showHistory && (
+          <div
+            className={`offcanvas-overlay ${showHistory ? "active" : ""}`}
+            onClick={() => setShowHistory(false)}
+          />
+        )}{" "}
+        {/* Offcanvas Sidebar */}
+        <div
+          className={`offcanvas-sidebar ${showHistory ? "active" : ""}`}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
+        >
+          {isAuthenticated ? (
+            <ChatHistoryAPI
+              token={token || undefined}
+              isAuthenticated={isAuthenticated}
+              currentSessionId={currentSessionId}
+              onSelectSession={handleSelectSessionAPI}
+              onNewChat={handleNewChatAPI}
+            />
+          ) : (
+            <ChatHistory
+              sessions={chatSessions}
+              onSelectSession={handleSelectSessionLocal}
+              onDeleteSession={handleDeleteSessionLocal}
+              onNewChat={handleNewChatLocal}
+              currentSessionId={localSessionId}
+            />
+          )}
+        </div>
         {/* Interface de chat principale */}
         <div className="chat-main">
           {/* Header */}
           <div className="chat-header">
+            {" "}
             <div className="header-left">
               {" "}
-              <button className="back-button" onClick={() => navigate(-1)}>
-                <ArrowLeft size={20} />
+              <button className="back-button" onClick={() => navigate("/")}>
+                <House size={20} />
               </button>
-              <button
-                className="history-toggle"
-                onClick={() => setShowHistory(!showHistory)}
-              >
-                <Menu size={20} />
-              </button>
+              {isAuthenticated && (
+                <button
+                  className="history-toggle"
+                  onClick={() => setShowHistory(!showHistory)}
+                >
+                  <Menu size={20} />
+                </button>
+              )}
               <div className="chat-title">
                 <h2>
                   {isAuthenticated
@@ -206,29 +232,6 @@ export default function ChatComponent({ isAuthenticated }: ChatComponentProps) {
                     : "Mode démonstration"}
                 </span>
               </div>
-            </div>
-
-            <div className="header-actions">
-              {isAuthenticated ? (
-                <>
-                  <button
-                    className="settings-button"
-                    onClick={() => setShowSettings(true)}
-                  >
-                    <Settings size={20} />
-                  </button>
-                  <button className="more-button">
-                    <MoreHorizontal size={20} />
-                  </button>
-                </>
-              ) : (
-                <button
-                  className="login-prompt-button"
-                  onClick={() => navigate("/login")}
-                >
-                  Se connecter pour plus de fonctionnalités
-                </button>
-              )}
             </div>
           </div>
 
@@ -244,32 +247,39 @@ export default function ChatComponent({ isAuthenticated }: ChatComponentProps) {
                   transition={{ duration: 0.3 }}
                   className={`message ${message.type}`}
                 >
+                  {" "}
                   <div className="message-avatar">
                     {message.type === "bot" ? (
                       <Bot size={20} />
                     ) : (
-                      <div
-                        className="user-avatar"
+                      <User
+                        size={20}
                         style={{
-                          backgroundColor: isAuthenticated
-                            ? userPreferences.avatarColor
-                            : "#f97316",
+                          color: "#f97316",
                         }}
-                      >
-                        <User size={16} />
-                      </div>
+                      />
                     )}
                   </div>
                   <div className="message-content">
                     <div className="message-header">
-                      <span className="message-sender">
+                      <span
+                        className="message-sender"
+                        style={{
+                          color: message.type === "bot" ? "#f97316" : "#222",
+                        }}
+                      >
                         {message.type === "bot"
                           ? "Robert AI"
                           : isAuthenticated
-                          ? userPreferences.username
-                          : "Vous"}
+                          ? "Vous"
+                          : "Utilisateur"}
                       </span>
-                      <span className="message-time">
+                      <span
+                        className="message-time"
+                        style={{
+                          color: message.type === "bot" ? "#f97316" : "#222",
+                        }}
+                      >
                         {formatTime(message.timestamp)}
                       </span>
                     </div>
@@ -310,6 +320,7 @@ export default function ChatComponent({ isAuthenticated }: ChatComponentProps) {
                   exit={{ opacity: 0, y: -10 }}
                   className="typing-indicator"
                 >
+                  {" "}
                   <div className="message-avatar">
                     <Bot size={20} />
                   </div>
@@ -349,25 +360,22 @@ export default function ChatComponent({ isAuthenticated }: ChatComponentProps) {
               >
                 <Send size={18} />
               </motion.button>
-            </form>
-
+            </form>{" "}
             {!isAuthenticated && (
               <div className="trial-notice">
-                💡 Connectez-vous pour sauvegarder vos conversations et accéder
-                à toutes les fonctionnalités !
+                <span style={{ fontSize: "1.1rem", marginRight: "0.5rem" }}>
+                  🚀
+                </span>
+                <strong>Débloquez toutes les fonctionnalités !</strong>
+                <br />
+                <span style={{ opacity: 0.9 }}>
+                  Connectez-vous pour sauvegarder vos conversations, accéder à
+                  l'historique et personnaliser votre expérience
+                </span>
               </div>
             )}
           </div>
         </div>
-        {/* Paramètres utilisateur (seulement si connecté) */}
-        {isAuthenticated && (
-          <UserSettings
-            isOpen={showSettings}
-            onClose={() => setShowSettings(false)}
-            preferences={userPreferences}
-            onUpdatePreferences={handleUpdatePreferences}
-          />
-        )}
       </div>
     </>
   );

@@ -12,7 +12,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  z-index: 1000;
+  z-index: var(--z-chat, 90);
 }
 
 /* Mode invité - avec espace pour le Header */
@@ -27,18 +27,171 @@
   height: 100vh;
 }
 
-/* Sidebar historique */
-.chat-history-sidebar {
-  width: 0;
-  background: #171717;
-  border-right: 1px solid #303030;
-  transition: all 0.3s ease;
-  overflow: hidden;
-  flex-shrink: 0;
+/* ===== SYSTÈME OFFCANVAS MODERNE ===== */
+
+/* Overlay avec animation fluide et effet de flou progressif */
+.offcanvas-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0);
+  backdrop-filter: blur(0px);
+  z-index: 999;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+  cursor: pointer;
 }
 
-.chat-history-sidebar:not(.hidden) {
-  width: 260px;
+.offcanvas-overlay.active {
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(8px);
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Sidebar avec animations ultra-fluides et effets visuels */
+.offcanvas-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 340px;
+  background: linear-gradient(145deg, #171717 0%, #1a1a1a 100%);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  transform: translateX(-100%);
+  transition: all 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+  z-index: 1000;
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
+  will-change: transform, box-shadow;
+  overflow: hidden;
+}
+
+/* État actif avec ombre progressive et effet de scale subtil */
+.offcanvas-sidebar.active {
+  transform: translateX(0);
+  box-shadow: 8px 0 32px rgba(0, 0, 0, 0.3), 4px 0 16px rgba(0, 0, 0, 0.2),
+    2px 0 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Effet de bordure lumineuse subtile */
+.offcanvas-sidebar::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    rgba(249, 115, 22, 0.3) 20%,
+    rgba(249, 115, 22, 0.5) 50%,
+    rgba(249, 115, 22, 0.3) 80%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.offcanvas-sidebar.active::before {
+  opacity: 1;
+}
+
+/* ===== AMÉLIORATIONS VISUELLES PREMIUM ===== */
+
+/* Effet de glow subtil au survol du bouton menu */
+.history-toggle {
+  position: relative;
+  overflow: hidden;
+}
+
+.history-toggle::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: radial-gradient(
+    circle,
+    rgba(249, 115, 22, 0.3) 0%,
+    transparent 70%
+  );
+  transform: translate(-50%, -50%);
+  transition: all 0.3s ease;
+  border-radius: 50%;
+}
+
+.history-toggle:hover::before {
+  width: 40px;
+  height: 40px;
+}
+
+/* Amélioration du focus keyboard pour l'accessibilité */
+.history-toggle:focus-visible {
+  outline: 2px solid #f97316;
+  outline-offset: 2px;
+}
+
+.offcanvas-overlay:focus {
+  outline: none;
+}
+
+/* Effet de micro-interaction sur l'ouverture */
+.chat-main {
+  transition: transform 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+  transform-origin: center center;
+}
+
+/* Suppression des effets sur mobile pour éviter les mouvements parasites */
+
+/* Amélioration des performances avec GPU acceleration */
+.offcanvas-sidebar,
+.offcanvas-overlay,
+.chat-main {
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  perspective: 1000px;
+  -webkit-perspective: 1000px;
+}
+
+/* Support pour les écrans tactiles - zones de touch plus grandes */
+@media (pointer: coarse) {
+  .history-toggle {
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  /* Zone de glissement pour fermer (swipe to close) */
+  .offcanvas-sidebar::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: -20px;
+    width: 20px;
+    height: 100%;
+    cursor: grab;
+  }
+}
+
+/* Animation de pulsation pour le bouton menu quand il y a de nouvelles données */
+.history-toggle.has-updates {
+  animation: pulseNotification 2s ease-in-out infinite;
+}
+
+@keyframes pulseNotification {
+  0% {
+    box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 8px rgba(249, 115, 22, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(249, 115, 22, 0);
+  }
 }
 
 /* Interface principale du chat */
@@ -167,10 +320,90 @@
   color: #ffffff;
   flex-shrink: 0;
   background: #1e1e1e;
+  position: relative;
+  overflow: hidden;
 }
 
+/* Avatar du bot avec design moderne */
+.message.bot .message-avatar {
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 70%, #dc2626 100%);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
+.message.bot .message-avatar::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    45deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  opacity: 0;
+}
+
+/* Avatar utilisateur - style simple et propre */
 .user-avatar {
-  background: #f97316 !important;
+  background: var(--user-avatar-color, #f97316) !important;
+  color: white !important;
+  font-weight: 600;
+  font-size: 0.75rem;
+  border: none !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+  text-shadow: none !important;
+  letter-spacing: 0 !important;
+  position: relative;
+  overflow: visible;
+}
+
+.user-avatar::before {
+  display: none;
+}
+
+.user-avatar:hover::before {
+  display: none;
+}
+
+/* Effet de hover simple pour l'avatar utilisateur */
+.user-avatar:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25) !important;
+}
+
+/* Effet de pulsation subtile pour indiquer l'activité */
+.message.bot .message-avatar {
+  animation: subtlePulse 3s ease-in-out infinite;
+}
+
+/* Animations */
+@keyframes shimmerEffect {
+  0% {
+    transform: translateX(-100%) translateY(-100%) rotate(-45deg);
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(100%) translateY(100%) rotate(-45deg);
+    opacity: 0;
+  }
+}
+
+@keyframes subtlePulse {
+  0%,
+  100% {
+    box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3),
+      0 2px 6px rgba(249, 115, 22, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+  50% {
+    box-shadow: 0 4px 16px rgba(249, 115, 22, 0.4),
+      0 2px 8px rgba(249, 115, 22, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+  }
 }
 
 .message-content {
@@ -296,6 +529,14 @@
   align-self: flex-start;
 }
 
+/* Avatar dans l'indicateur de frappe hérite du style bot */
+.typing-indicator .message-avatar {
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 70%, #dc2626 100%);
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3),
+    0 2px 6px rgba(249, 115, 22, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+}
+
 .typing-dots {
   display: flex;
   gap: 0.25rem;
@@ -319,6 +560,21 @@
 
 .typing-dots span:nth-child(2) {
   animation-delay: -0.16s;
+}
+
+/* Animation spéciale pour l'avatar pendant la frappe */
+@keyframes typingAvatarPulse {
+  0%,
+  100% {
+    box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3),
+      0 2px 6px rgba(249, 115, 22, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 6px 20px rgba(249, 115, 22, 0.5),
+      0 3px 10px rgba(249, 115, 22, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transform: scale(1.02);
+  }
 }
 
 @keyframes typing-pulse {
@@ -399,22 +655,84 @@
   transform: none;
 }
 
-/* Overlay et modales */
-.settings-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
-  z-index: 1100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+/* Message d'invitation à se connecter */
+.trial-notice {
+  margin-top: 1rem;
+  padding: 1rem 1.25rem;
+  background: linear-gradient(
+    135deg,
+    rgba(249, 115, 22, 0.1) 0%,
+    rgba(251, 146, 60, 0.08) 100%
+  );
+  border: 1px solid rgba(249, 115, 22, 0.2);
+  border-radius: 12px;
+  text-align: center;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #fdba74;
+  position: relative;
+  overflow: hidden;
   backdrop-filter: blur(4px);
+  animation: slideInUp 0.5s ease-out;
 }
 
-/* Responsive */
+.trial-notice::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(249, 115, 22, 0.1),
+    transparent
+  );
+  animation: shimmer 3s infinite;
+}
+
+.trial-notice:hover {
+  background: linear-gradient(
+    135deg,
+    rgba(249, 115, 22, 0.15) 0%,
+    rgba(251, 146, 60, 0.12) 100%
+  );
+  border-color: rgba(249, 115, 22, 0.3);
+  transform: translateY(-1px);
+  transition: all 0.3s ease;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+
+/* ===== RESPONSIVE DESIGN MODERNE ===== */
+
+/* Tablettes et écrans moyens */
+@media (max-width: 1024px) {
+  .offcanvas-sidebar {
+    width: 300px;
+  }
+}
+
+/* Smartphones et petits écrans */
 @media (max-width: 768px) {
   .chat-component.guest {
     top: 60px;
@@ -450,11 +768,20 @@
     font-size: 0.8125rem;
     padding: 6px 12px;
   }
-  .chat-history-sidebar {
-    width: 260px;
+
+  /* Offcanvas pleine largeur sur mobile */
+  .offcanvas-sidebar {
+    width: 85vw;
+    max-width: 320px;
+  }
+
+  /* Amélioration de l'overlay sur mobile */
+  .offcanvas-overlay {
+    -webkit-tap-highlight-color: transparent;
   }
 }
 
+/* Très petits écrans */
 @media (max-width: 480px) {
   .header-left {
     gap: 0.5rem;
@@ -469,7 +796,47 @@
   }
 
   .chat-input-form input {
-    font-size: 16px;
+    font-size: 16px; /* Évite le zoom sur iOS */
+  }
+
+  .trial-notice {
+    margin-top: 0.75rem;
+    padding: 0.875rem 1rem;
+    font-size: 0.8125rem;
+    line-height: 1.4;
+  }
+
+  .trial-notice br {
+    display: none;
+  }
+
+  /* Offcanvas presque pleine largeur sur très petits écrans */
+  .offcanvas-sidebar {
+    width: 90vw;
+    max-width: 280px;
+  }
+}
+
+/* Mode sombre amélioré pour l'offcanvas */
+@media (prefers-color-scheme: dark) {
+  .offcanvas-sidebar {
+    background: linear-gradient(145deg, #0f0f0f 0%, #1a1a1a 100%);
+    border-right-color: rgba(255, 255, 255, 0.06);
+  }
+}
+
+/* Réduction des animations pour les utilisateurs qui le préfèrent */
+@media (prefers-reduced-motion: reduce) {
+  .offcanvas-overlay,
+  .offcanvas-sidebar,
+  .offcanvas-sidebar::before,
+  .offcanvas-sidebar .chat-history,
+  .offcanvas-sidebar .chat-history-api {
+    transition: none;
+  }
+
+  .offcanvas-overlay.active {
+    backdrop-filter: blur(4px);
   }
 }
 
@@ -495,4 +862,68 @@
 .messages-container {
   scrollbar-width: thin;
   scrollbar-color: #3a3a3a #1a1a1a;
+}
+
+/* Style par défaut pour l'icône quand pas d'initiales */
+.user-avatar svg {
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+}
+
+/* Version plus grande pour les écrans larges */
+@media (min-width: 1200px) {
+  .message-avatar {
+    width: 44px;
+    height: 44px;
+  }
+
+  .user-avatar {
+    font-size: 0.8rem;
+  }
+}
+
+/* Version plus petite pour mobile */
+@media (max-width: 480px) {
+  .message-avatar {
+    width: 36px;
+    height: 36px;
+  }
+
+  .user-avatar {
+    font-size: 0.7rem;
+  }
+
+  .message.bot .message-avatar,
+  .typing-indicator .message-avatar {
+    box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3),
+      0 1px 4px rgba(249, 115, 22, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+}
+
+/* Amélioration des performances sur mobile */
+@media (max-width: 768px) {
+  .message-avatar:hover {
+    transform: none; /* Désactiver le scale au hover sur mobile */
+  }
+
+  .message.bot .message-avatar:hover::before {
+    animation: none; /* Désactiver les animations complexes sur mobile */
+  }
+}
+
+/* Support pour les préférences de mouvement réduit */
+@media (prefers-reduced-motion: reduce) {
+  .message-avatar,
+  .user-avatar,
+  .message.bot .message-avatar {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .message-avatar:hover {
+    transform: none;
+  }
+
+  .message.bot .message-avatar::before {
+    display: none;
+  }
 }
