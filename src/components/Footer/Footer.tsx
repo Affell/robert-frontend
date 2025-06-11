@@ -1,4 +1,4 @@
-import { Github, Twitter, Linkedin, Mail, Heart } from "lucide-react";
+import { Heart } from "lucide-react";
 import "./Footer.css";
 
 export default function Footer() {

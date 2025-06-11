@@ -29,6 +29,31 @@ export default function Help() {
         "Une fois connecté, cliquez sur 'Mes chats' ou 'Essayer Robert' pour accéder à l'interface de chat. Tapez votre question dans la zone de texte et appuyez sur Entrée pour envoyer votre message.",
     },
     {
+      question: "Qu'est-ce que l'extension Chrome de Robert AI ?",
+      answer:
+        "L'extension Chrome de Robert AI vous permet d'accéder instantanément à votre assistant IA directement depuis n'importe quelle page web, sans avoir à ouvrir un nouvel onglet. Elle s'intègre parfaitement dans votre navigateur pour une expérience fluide.",
+    },
+    {
+      question: "Comment installer l'extension Chrome ?",
+      answer:
+        "Rendez-vous dans la section 'Extension' de notre site, puis cliquez sur le lien vers le Chrome Web Store. Cliquez sur 'Ajouter à Chrome' et confirmez l'installation. L'extension apparaîtra ensuite dans votre barre d'outils.",
+    },
+    {
+      question: "Comment utiliser l'extension Chrome ?",
+      answer:
+        "Une fois installée, cliquez simplement sur l'icône Robert AI dans votre barre d'outils Chrome. Une fenêtre popup s'ouvrira avec l'interface de chat. Vous devez être connecté à votre compte pour utiliser l'extension.",
+    },
+    {
+      question: "L'extension fonctionne-t-elle hors ligne ?",
+      answer:
+        "Non, l'extension nécessite une connexion internet pour communiquer avec les serveurs de Robert AI. Assurez-vous d'être connecté à internet pour utiliser toutes les fonctionnalités.",
+    },
+    {
+      question: "Mes données sont-elles sécurisées avec l'extension ?",
+      answer:
+        "Absolument. L'extension utilise les mêmes protocoles de sécurité que notre application web. Vos conversations sont chiffrées et l'extension ne collecte aucune donnée de navigation personnelle.",
+    },
+    {
       question: "Robert AI est-il gratuit ?",
       answer:
         "Oui, Robert AI propose un plan gratuit avec des limitations. Pour plus de fonctionnalités avancées, consultez nos plans premium.",
