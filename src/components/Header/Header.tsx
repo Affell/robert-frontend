@@ -141,7 +141,9 @@ export default function Header() {
               ) : (
                 <MessageSquare size={16} />
               )}
-              {isAuthenticated ? "Mes chats" : "Essayer Robert"}
+              <span className="btn-text">
+                {isAuthenticated ? "Mes chats" : "Essayer Robert"}
+              </span>
             </button>
             {/* Menu mobile */}
             <button
