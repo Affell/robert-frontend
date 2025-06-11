@@ -17,42 +17,44 @@ export default function Legal() {
                 <strong>Nom du site :</strong> Robert - Assistant IA
               </p>
               <p>
-                <strong>Adresse du site :</strong> [Votre nom de domaine]
+                <strong>Adresse du site :</strong> https://robertai.fr
               </p>
               <p>
-                <strong>Propriétaire :</strong> [Votre nom/société]
+                <strong>Propriétaire :</strong> RobertAI
               </p>
               <p>
-                <strong>Statut :</strong> [Forme juridique]
+                <strong>Statut :</strong> SARL (Société à Responsabilité
+                Limitée)
               </p>
               <p>
-                <strong>Capital social :</strong> [Montant si applicable]
+                <strong>Capital social :</strong> 1 000 000€
               </p>
               <p>
-                <strong>Siège social :</strong> [Adresse complète]
+                <strong>Siège social :</strong> 150 rue de la Technologie, 75000
+                Paris, France
               </p>
               <p>
-                <strong>Numéro de téléphone :</strong> [Numéro]
+                <strong>Numéro de téléphone :</strong> +33 1 23 45 67 89
               </p>
               <p>
                 <strong>Adresse email :</strong> contact@robert-ai.com
               </p>
               <p>
-                <strong>Numéro SIRET :</strong> [Numéro si applicable]
+                <strong>Numéro SIRET :</strong> 1234 567 890 00012
               </p>
               <p>
-                <strong>Numéro TVA intracommunautaire :</strong> [Numéro si
-                applicable]
+                <strong>Numéro TVA intracommunautaire :</strong> FR12 3456 7890
+                1234
               </p>
             </section>
 
             <section>
               <h2>2. Directeur de la publication</h2>
               <p>
-                <strong>Nom :</strong> [Nom du responsable]
+                <strong>Nom :</strong> LENROUE Axel
               </p>
               <p>
-                <strong>Qualité :</strong> [Fonction]
+                <strong>Qualité :</strong> Directeur de la publication
               </p>
               <p>
                 <strong>Email :</strong> contact@robert-ai.com
@@ -62,13 +64,14 @@ export default function Legal() {
             <section>
               <h2>3. Hébergement</h2>
               <p>
-                <strong>Hébergeur :</strong> [Nom de l'hébergeur]
+                <strong>Hébergeur :</strong> Coloc3G
               </p>
               <p>
-                <strong>Adresse :</strong> [Adresse de l'hébergeur]
+                <strong>Adresse :</strong> 123 Avenue de l'Hébergement, 75000
+                Paris, France
               </p>
               <p>
-                <strong>Téléphone :</strong> [Numéro de l'hébergeur]
+                <strong>Téléphone :</strong> +33 1 23 45 67 89
               </p>
             </section>
 
@@ -103,7 +106,7 @@ export default function Legal() {
               <p>
                 Pour exercer ces droits, vous pouvez nous contacter à l'adresse
                 :
-                <a href="mailto:privacy@robert-ai.com">privacy@robert-ai.com</a>
+                <a href="mailto:support@robert-ai.com">support@robert-ai.com</a>
               </p>
               <p>
                 Les données collectées sont utilisées uniquement pour le
@@ -127,7 +130,7 @@ export default function Legal() {
               <p>
                 Tout le contenu présent sur ce site (textes, images, graphismes,
                 logo, icônes, sons, logiciels) est la propriété exclusive de
-                [Votre société] ou de ses partenaires. Toute reproduction,
+                RobertAI ou de ses partenaires. Toute reproduction,
                 représentation, modification, publication, adaptation de tout ou
                 partie des éléments du site est interdite, sauf autorisation
                 écrite préalable.
@@ -174,8 +177,6 @@ export default function Legal() {
                     contact@robert-ai.com
                   </a>
                 </li>
-                <li>Par téléphone : [Votre numéro]</li>
-                <li>Par courrier : [Votre adresse]</li>
               </ul>
             </section>
 
