@@ -13,6 +13,8 @@ export default function Account() {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showForgotPasswordModal, setShowForgotPasswordModal] = useState(false);
+  const [forgotPasswordEmail, setForgotPasswordEmail] = useState("");
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -96,6 +98,32 @@ export default function Account() {
       }
     }
   };
+  const handleForgotPassword = async () => {
+    if (!forgotPasswordEmail.trim()) {
+      toast.error("Veuillez saisir une adresse email.");
+      return;
+    }
+
+    try {
+      const response = await postFetch("/auth/recover", {
+        email: forgotPasswordEmail,
+      });
+      if (response?.status === 201) {
+        toast.success("Un email de réinitialisation a été envoyé !");
+        setShowForgotPasswordModal(false);
+        setForgotPasswordEmail("");
+      } else {
+        toast.error(
+          response?.data?.message ||
+            "Erreur lors de la réinitialisation du mot de passe"
+        );
+      }
+    } catch (error) {
+      toast.error(
+        "Une erreur s'est produite lors de la réinitialisation du mot de passe. Veuillez réessayer."
+      );
+    }
+  };
 
   return (
     <>
@@ -144,7 +172,6 @@ export default function Account() {
                 </div>
               </div>
             )}
-
             <div className="form-group">
               <label htmlFor="email">Email</label>
               <div className="input-with-icon">
@@ -160,7 +187,6 @@ export default function Account() {
                 />
               </div>
             </div>
-
             <div className="form-group">
               <label htmlFor="password">Mot de passe</label>
               <div className="input-with-icon">
@@ -183,7 +209,6 @@ export default function Account() {
                 </button>
               </div>
             </div>
-
             {!isLogin && (
               <div className="form-group">
                 <label htmlFor="confirmPassword">
@@ -213,16 +238,18 @@ export default function Account() {
                   </button>
                 </div>
               </div>
-            )}
-
+            )}{" "}
             {isLogin && (
               <div className="form-options">
-                <a href="#" className="forgot-password">
+                <button
+                  type="button"
+                  className="forgot-password"
+                  onClick={() => setShowForgotPasswordModal(true)}
+                >
                   Mot de passe oublié ?
-                </a>
+                </button>
               </div>
             )}
-
             <button type="submit" className="btn btn-primary btn-full">
               {isLogin ? "Se connecter" : "Créer le compte"}
             </button>
@@ -266,10 +293,67 @@ export default function Account() {
                 />
               </svg>
               Continuer avec Google
-            </button>
+            </button>{" "}
           </div>
         </div>
       </div>
+
+      {/* Modal pour mot de passe oublié */}
+      {showForgotPasswordModal && (
+        <div
+          className="modal-overlay"
+          onClick={() => setShowForgotPasswordModal(false)}
+        >
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <h2>Mot de passe oublié</h2>
+              <button
+                className="modal-close"
+                onClick={() => setShowForgotPasswordModal(false)}
+              >
+                ×
+              </button>
+            </div>
+            <div className="modal-body">
+              <p>
+                Saisissez votre adresse email pour recevoir un lien de
+                réinitialisation.
+              </p>
+              <div className="form-group">
+                <label htmlFor="forgot-email">Email</label>
+                <div className="input-with-icon">
+                  <Mail className="input-icon" />
+                  <input
+                    type="email"
+                    id="forgot-email"
+                    value={forgotPasswordEmail}
+                    onChange={(e) => setForgotPasswordEmail(e.target.value)}
+                    placeholder="votre@email.com"
+                    autoFocus
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={() => setShowForgotPasswordModal(false)}
+              >
+                Annuler
+              </button>
+              <button
+                type="button"
+                className="btn btn-primary"
+                onClick={handleForgotPassword}
+              >
+                Envoyer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <Footer />
     </>
   );
