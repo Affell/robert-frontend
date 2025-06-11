@@ -1,4 +1,4 @@
-import { ArrowRight, Zap, Users } from "lucide-react";
+import { ArrowRight, Zap, Users, Chrome } from "lucide-react";
 import { motion } from "framer-motion";
 import "./Hero.css";
 import { useNavigate } from "react-router-dom";
@@ -28,13 +28,11 @@ export default function Hero() {
               <br />
               pour tous vos besoins
             </h1>
-
             <p className="hero-description">
               Robert est un chatbot IA révolutionnaire qui comprend vos besoins
               et vous aide à accomplir vos tâches avec une précision
               remarquable. Découvrez l'avenir de l'assistance intelligente.
             </p>
-
             {/* Section des créateurs */}
             <div
               style={{
@@ -78,8 +76,7 @@ export default function Hero() {
                   Janiak Maxence
                 </div>
               </div>
-            </div>
-
+            </div>{" "}
             <div className="hero-actions">
               <button
                 className="btn btn-primary btn-large"
@@ -88,8 +85,14 @@ export default function Hero() {
                 Commencer à discuter
                 <ArrowRight size={20} />
               </button>
+              <button
+                className="btn btn-secondary btn-large"
+                onClick={() => navigate("/extension")}
+              >
+                Télécharger notre extension Chrome
+                <Chrome size={20} />
+              </button>
             </div>
-
             <div className="hero-stats">
               <div className="stat">
                 <span className="stat-number">50K+</span>

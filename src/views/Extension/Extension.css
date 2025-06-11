@@ -1,0 +1,365 @@
+/* Extension Page Specific Styles */
+
+.extension-page {
+  min-height: 100vh;
+  background: var(--background);
+  color: var(--text-primary);
+}
+
+.extension-page .extension-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+.extension-page .extension-header {
+  margin-bottom: 2rem;
+}
+
+.extension-page .extension-back-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 0.875rem;
+  font-weight: 500;
+  padding: 0.5rem 0;
+  transition: color 0.2s ease;
+}
+
+.extension-page .extension-back-btn:hover {
+  color: var(--text-primary);
+}
+
+/* Hero Section */
+.extension-page .extension-hero {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.extension-page .extension-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, var(--accent) 0%, #fbbf24 100%);
+  border-radius: 50%;
+  margin-bottom: 2rem;
+  color: white;
+}
+
+.extension-page .extension-hero h1 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, var(--accent) 0%, #fbbf24 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.extension-page .extension-hero p {
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Download Section */
+.extension-page .extension-download-section {
+  margin-bottom: 4rem;
+}
+
+.extension-page .extension-download-card {
+  background: rgba(17, 17, 17, 0.5);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 3rem;
+  text-align: center;
+  backdrop-filter: blur(10px);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.extension-page .extension-download-card h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: var(--text-primary);
+}
+
+.extension-page .extension-download-card p {
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+  line-height: 1.6;
+}
+
+.extension-page .extension-download-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, var(--accent) 0%, #fbbf24 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 1.5rem;
+}
+
+.extension-page .extension-download-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(249, 115, 22, 0.3);
+}
+
+.extension-page .extension-download-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+/* Installation Section */
+.extension-page .extension-installation-section {
+  margin-bottom: 4rem;
+}
+
+.extension-page .extension-installation-section h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 3rem;
+  color: var(--text-primary);
+}
+
+.extension-page .extension-installation-steps {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.extension-page .extension-step {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  padding: 2rem;
+  background: rgba(17, 17, 17, 0.3);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+}
+
+.extension-page .extension-step-number {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, var(--accent) 0%, #fbbf24 100%);
+  color: white;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 1.125rem;
+  flex-shrink: 0;
+}
+
+.extension-page .extension-step-content h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.extension-page .extension-step-content p {
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.extension-page .extension-step-content code {
+  background: rgba(249, 115, 22, 0.1);
+  border: 1px solid rgba(249, 115, 22, 0.3);
+  color: var(--accent);
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: "Courier New", monospace;
+  font-size: 0.875rem;
+}
+
+/* Features Section */
+.extension-page .extension-features-section {
+  margin-bottom: 4rem;
+  padding: 3rem 0;
+}
+
+.extension-page .extension-features-section h2 {
+  font-size: 2.25rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 3rem;
+  color: var(--text-primary);
+}
+
+.extension-page .extension-features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.extension-page .extension-feature-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  padding: 2rem;
+  background: rgba(17, 17, 17, 0.3);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  transition: all 0.3s ease;
+  min-height: 180px;
+}
+
+.extension-page .extension-feature-item:hover {
+  transform: translateY(-3px);
+  border-color: rgba(249, 115, 22, 0.3);
+  background: rgba(17, 17, 17, 0.5);
+}
+
+.extension-page .extension-feature-item.extension-featured {
+  background: rgba(249, 115, 22, 0.05);
+}
+
+.extension-page .extension-feature-item.extension-featured:hover {
+  border-color: rgba(249, 115, 22, 0.3);
+}
+
+.extension-page .extension-feature-content {
+  flex: 1;
+}
+
+.extension-page .extension-feature-item h3 {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+}
+
+.extension-page .extension-feature-item p {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* Help Section */
+.extension-page .extension-help-section {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.extension-page .extension-help-section h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: var(--text-primary);
+}
+
+.extension-page .extension-help-section p {
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  line-height: 1.6;
+}
+
+.extension-page .extension-help-actions {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.extension-page .extension-help-btn {
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.extension-page .extension-help-btn.extension-primary {
+  background: linear-gradient(135deg, var(--accent) 0%, #fbbf24 100%);
+  color: white;
+}
+
+.extension-page .extension-help-btn.extension-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(249, 115, 22, 0.3);
+}
+
+.extension-page .extension-help-btn.extension-secondary {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+}
+
+.extension-page .extension-help-btn.extension-secondary:hover {
+  background: var(--surface-hover);
+  border-color: var(--accent);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .extension-page .extension-container {
+    padding: 1.5rem 1rem;
+  }
+
+  .extension-page .extension-step {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .extension-page .extension-step-number {
+    align-self: center;
+  }
+
+  .extension-page .extension-features-section {
+    padding: 3rem 1rem;
+  }
+
+  .extension-page .extension-features-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .extension-page .extension-feature-item {
+    padding: 1.5rem;
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .extension-page .extension-help-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .extension-page .extension-help-btn {
+    width: 100%;
+    max-width: 300px;
+  }
+}

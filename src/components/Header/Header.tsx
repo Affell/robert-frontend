@@ -47,7 +47,8 @@ export default function Header() {
           >
             <MessageSquare className="logo-icon" />
             <span className="logo-text">Robert AI</span>
-          </div>          {/* Navigation Desktop */}
+          </div>{" "}
+          {/* Navigation Desktop */}
           <nav className="nav desktop-nav">
             <button
               className="nav-link nav-button"
@@ -60,11 +61,18 @@ export default function Header() {
               onClick={() => navigate("/about")}
             >
               À propos
-            </button>            <button
+            </button>{" "}
+            <button
               className="nav-link nav-button"
               onClick={() => navigate("/pricing")}
             >
               Tarifs
+            </button>
+            <button
+              className="nav-link nav-button"
+              onClick={() => navigate("/extension")}
+            >
+              Extension
             </button>
             <button
               className="nav-link nav-button"
@@ -143,7 +151,8 @@ export default function Header() {
               {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
-        </div>        {/* Navigation Mobile */}
+        </div>{" "}
+        {/* Navigation Mobile */}
         {isMobileMenuOpen && (
           <nav className="nav mobile-nav">
             <button
@@ -163,7 +172,8 @@ export default function Header() {
               }}
             >
               À propos
-            </button>            <button
+            </button>{" "}
+            <button
               className="nav-link nav-button"
               onClick={() => {
                 navigate("/pricing");
@@ -171,6 +181,15 @@ export default function Header() {
               }}
             >
               Tarifs
+            </button>
+            <button
+              className="nav-link nav-button"
+              onClick={() => {
+                navigate("/extension");
+                setIsMobileMenuOpen(false);
+              }}
+            >
+              Extension
             </button>
             <button
               className="nav-link nav-button"

@@ -12,6 +12,7 @@ import ResetPassword from "./views/ResetPassword/ResetPassword";
 import { AuthProvider } from "./core/auth/AuthContext";
 import ProtectedRoute from "./core/config/protectedRoute";
 import Legal from "./views/Legal/Legal";
+import Extension from "./views/Extension/Extension";
 
 export default function App() {
   return (
@@ -26,6 +27,7 @@ export default function App() {
           <Route path="/about" element={<About />} />
           <Route path="/pricing" element={<Pricing />} />{" "}
           <Route path="/help" element={<Help />} />
+          <Route path="/extension" element={<Extension />} />
           <Route path="/login" element={<Account />} />
           <Route path="/reset_password" element={<ResetPassword />} />
           <Route path="/legal" element={<Legal />} />

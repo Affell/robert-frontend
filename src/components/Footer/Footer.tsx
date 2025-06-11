@@ -15,20 +15,6 @@ export default function Footer() {
               L'assistant IA intelligent qui transforme votre façon de
               travailler et d'interagir avec la technologie.
             </p>
-            <div className="footer-social">
-              <a href="#" className="social-link" aria-label="GitHub">
-                <Github size={20} />
-              </a>
-              <a href="#" className="social-link" aria-label="Twitter">
-                <Twitter size={20} />
-              </a>
-              <a href="#" className="social-link" aria-label="LinkedIn">
-                <Linkedin size={20} />
-              </a>
-              <a href="#" className="social-link" aria-label="Email">
-                <Mail size={20} />
-              </a>
-            </div>
           </div>{" "}
           {/* Navigation */}
           <div className="footer-section">
@@ -42,6 +28,9 @@ export default function Footer() {
               </li>
               <li>
                 <a href="/pricing">Tarifs</a>
+              </li>
+              <li>
+                <a href="/extension">Extension Chrome</a>
               </li>
             </ul>
           </div>

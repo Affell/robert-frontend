@@ -4,6 +4,10 @@ import "./About.css";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header/Header";
 import Footer from "../../components/Footer/Footer";
+import axelLImage from "../../assets/img/axelL.png";
+import axelMImage from "../../assets/img/axelM.png";
+import maxenceImage from "../../assets/img/maxence.png";
+import rubenImage from "../../assets/img/ruben.png";
 
 export default function About() {
   const features = [
@@ -20,13 +24,34 @@ export default function About() {
         "Des réponses instantanées grâce à une architecture optimisée et des serveurs haute performance.",
     },
   ];
-
   const team = [
     {
-      name: "Équipe Robert AI",
-      role: "Développement & IA",
+      name: "Axel L",
+      role: "Backend Developer & AI Integration",
       description:
-        "Une équipe passionnée dédiée à créer la meilleure expérience d'assistant IA.",
+        "Responsable de l'intégration du modèle IA et création du backend en Golang.",
+      image: axelLImage,
+    },
+    {
+      name: "Axel M",
+      role: "Frontend Developer",
+      description:
+        "Développement de l'interface utilisateur et des composants React.",
+      image: axelMImage,
+    },
+    {
+      name: "Maxence",
+      role: "Extension Developer",
+      description:
+        "Création et développement de l'extension Chrome pour Robert AI.",
+      image: maxenceImage,
+    },
+    {
+      name: "Ruben",
+      role: "Frontend Developer & API Integration",
+      description:
+        "Développement frontend et implémentation des APIs entre les composants.",
+      image: rubenImage,
     },
   ];
   const navigate = useNavigate();
@@ -136,12 +161,12 @@ export default function About() {
               transition={{ delay: 0.9 }}
               className="about-section"
             >
-              <h2>Équipe</h2>
+              <h2>Équipe</h2>{" "}
               <div className="team-grid">
                 {team.map((member, index) => (
                   <div key={index} className="team-member">
                     <div className="member-avatar">
-                      <Brain size={24} />
+                      <img src={member.image} alt={member.name} />
                     </div>
                     <h3>{member.name}</h3>
                     <p className="member-role">{member.role}</p>
