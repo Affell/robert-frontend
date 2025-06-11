@@ -19,6 +19,7 @@ import { useAuth } from "../../core/auth/AuthContext";
 import { getUserInfo, type UserData } from "../../core/api/APIManager";
 import { postFetch } from "../../core/api/fetch";
 import { useChatSessions } from "../../core/hooks/useChatSessions";
+import { ClipLoader } from "react-spinners";
 
 export default function Profile() {
   const { token, isAuthenticated } = useAuth();
@@ -180,10 +181,12 @@ export default function Profile() {
         <Header />
         <main className="profile-main">
           <div className="profile-container">
-            <div className="loading-spinner">
-              <div className="spinner"></div>
-              <p>Chargement des informations...</p>
-            </div>
+            <ClipLoader
+              loading={true}
+              size={24}
+              color="#f97316"
+              aria-label="Loading..."
+            />
           </div>
         </main>
         <Footer />
@@ -358,8 +361,11 @@ export default function Profile() {
 
               {sessionsLoading && (
                 <div className="loading-sessions">
-                  <div className="spinner"></div>
-                  <p>Chargement de l'historique...</p>
+                  <ClipLoader
+                    size={24}
+                    color="#f97316"
+                    aria-label="Loading..."
+                  />
                 </div>
               )}
 

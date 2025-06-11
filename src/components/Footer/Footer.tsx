@@ -55,6 +55,9 @@ export default function Footer() {
               <li>
                 <a href="/chat">Essayer Robert</a>
               </li>
+              <li>
+                <a href="/legal">Mentions légales</a>
+              </li>
             </ul>
           </div>
         </div>

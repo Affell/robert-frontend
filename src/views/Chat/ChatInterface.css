@@ -7,16 +7,6 @@
   background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
 }
 
-.loading-spinner {
-  padding: 2rem;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  font-size: 1.1rem;
-  color: #64748b;
-  animation: pulse 2s infinite;
-}
-
 @keyframes pulse {
   0%,
   100% {

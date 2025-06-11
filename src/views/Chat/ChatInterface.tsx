@@ -1,6 +1,7 @@
 import { useAuth } from "../../core/auth/AuthContext";
 import ChatComponent from "../../components/ChatComponent/ChatComponent";
 import "./ChatInterface.css";
+import { ClipLoader } from "react-spinners";
 
 export default function ChatInterface() {
   const { isAuthenticated, loading } = useAuth();
@@ -9,7 +10,7 @@ export default function ChatInterface() {
   if (loading) {
     return (
       <div className="chat-interface-loading">
-        <div className="loading-spinner">Chargement...</div>
+        <ClipLoader size={24} color="#f97316" aria-label="Loading..." />
       </div>
     );
   }

@@ -10,11 +10,14 @@ import Profile from "./views/Profile/Profile";
 import Help from "./views/Help/Help";
 import { AuthProvider } from "./core/auth/AuthContext";
 import ProtectedRoute from "./core/config/protectedRoute";
+import Legal from "./views/Legal/Legal";
 
 export default function App() {
   return (
     <BrowserRouter>
-      <AuthProvider>        <Routes>
+      <AuthProvider>
+        {" "}
+        <Routes>
           {/* Routes publiques */}
           <Route path="/" element={<Hero />} />
           <Route path="/chat" element={<ChatInterface />} />
@@ -23,6 +26,7 @@ export default function App() {
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/help" element={<Help />} />
           <Route path="/login" element={<Account />} />
+          <Route path="/legal" element={<Legal />} />
           {/* Routes protégées */}
           <Route element={<ProtectedRoute />}>
             <Route path="/profile" element={<Profile />} />

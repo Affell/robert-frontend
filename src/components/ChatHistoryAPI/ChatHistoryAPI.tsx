@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Trash2, Search, Plus } from "lucide-react";
 import { useChatSessions } from "../../core/hooks/useChatSessions";
 import "./ChatHistoryAPI.css";
+import { ClipLoader } from "react-spinners";
 
 interface ChatHistoryAPIProps {
   token?: string;
@@ -81,8 +82,7 @@ export default function ChatHistoryAPI({
       <div className="chat-sessions">
         {loading && (
           <div className="loading-sessions">
-            <div className="loading-spinner"></div>
-            <p>Chargement des conversations...</p>
+            <ClipLoader size={24} color="#f97316" aria-label="Loading..." />
           </div>
         )}
 
