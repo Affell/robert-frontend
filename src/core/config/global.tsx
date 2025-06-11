@@ -3,6 +3,6 @@ export const Config = {
     API: import.meta.env.VITE_API_URL || "https://api.robertai.fr",
   },
   App: {
-    Name: "CoSplit",
+    Name: "Robert AI",
   },
 };
