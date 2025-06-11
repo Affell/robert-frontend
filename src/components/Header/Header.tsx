@@ -47,27 +47,31 @@ export default function Header() {
           >
             <MessageSquare className="logo-icon" />
             <span className="logo-text">Robert AI</span>
-          </div>
-          {/* Navigation Desktop */}
+          </div>          {/* Navigation Desktop */}
           <nav className="nav desktop-nav">
-            <a href="#features" className="nav-link">
+            <button
+              className="nav-link nav-button"
+              onClick={() => navigate("/features")}
+            >
               Fonctionnalités
-            </a>
+            </button>
             <button
               className="nav-link nav-button"
               onClick={() => navigate("/about")}
             >
               À propos
-            </button>
-            <button
+            </button>            <button
               className="nav-link nav-button"
               onClick={() => navigate("/pricing")}
             >
               Tarifs
             </button>
-            <a href="#contact" className="nav-link">
-              Contact
-            </a>
+            <button
+              className="nav-link nav-button"
+              onClick={() => navigate("/help")}
+            >
+              Aide
+            </button>
           </nav>{" "}
           {/* Actions */}
           <div className="header-actions">
@@ -139,14 +143,18 @@ export default function Header() {
               {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
-        </div>
-
-        {/* Navigation Mobile */}
+        </div>        {/* Navigation Mobile */}
         {isMobileMenuOpen && (
           <nav className="nav mobile-nav">
-            <a href="#features" className="nav-link">
+            <button
+              className="nav-link nav-button"
+              onClick={() => {
+                navigate("/features");
+                setIsMobileMenuOpen(false);
+              }}
+            >
               Fonctionnalités
-            </a>
+            </button>
             <button
               className="nav-link nav-button"
               onClick={() => {
@@ -155,8 +163,7 @@ export default function Header() {
               }}
             >
               À propos
-            </button>
-            <button
+            </button>            <button
               className="nav-link nav-button"
               onClick={() => {
                 navigate("/pricing");
@@ -165,9 +172,15 @@ export default function Header() {
             >
               Tarifs
             </button>
-            <a href="#contact" className="nav-link">
-              Contact
-            </a>
+            <button
+              className="nav-link nav-button"
+              onClick={() => {
+                navigate("/help");
+                setIsMobileMenuOpen(false);
+              }}
+            >
+              Aide
+            </button>
           </nav>
         )}
       </div>

@@ -33,10 +33,9 @@ export default function Footer() {
 
           {/* Liens produit */}
           <div className="footer-section">
-            <h3 className="footer-title">Produit</h3>
-            <ul className="footer-links">
+            <h3 className="footer-title">Produit</h3>            <ul className="footer-links">
               <li>
-                <a href="#features">Fonctionnalités</a>
+                <a href="/features">Fonctionnalités</a>
               </li>
               <li>
                 <a href="#pricing">Tarifs</a>
@@ -78,12 +77,11 @@ export default function Footer() {
               </li>
               <li>
                 <a href="#careers">Carrières</a>
-              </li>
-              <li>
+              </li>              <li>
                 <a href="#press">Presse</a>
               </li>
               <li>
-                <a href="#contact">Contact</a>
+                <a href="/help">Aide</a>
               </li>
             </ul>
           </div>
