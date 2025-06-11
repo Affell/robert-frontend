@@ -34,7 +34,7 @@ export default function Account() {
     if (isLogin) {
       // Logique de connexion
       if (!formData.email || !formData.password) {
-        toast("Veuillez remplir tous les champs requis.");
+        toast.error("Veuillez remplir tous les champs requis.");
         return;
       }
 
@@ -45,17 +45,18 @@ export default function Account() {
         });
 
         if (response?.status === 200) {
-          toast("Connexion réussie !");
-          navigate("/profile");
+          toast.success("Connexion réussie !");
           if (response.data.token) {
             login(response.data.token);
           }
+          navigate("/profile");
+        } else {
+          toast.error(response?.data?.message || "Erreur de connexion");
         }
       } catch (error) {
-        toast(
+        toast.error(
           "Une erreur s'est produite lors de la connexion. Veuillez réessayer."
         );
-        console.error("Erreur lors de la connexion :", error);
       }
     } else {
       if (
@@ -64,11 +65,11 @@ export default function Account() {
         !formData.firstName ||
         !formData.lastName
       ) {
-        toast("Veuillez remplir tous les champs requis!");
+        toast.error("Veuillez remplir tous les champs requis!");
         return;
       }
       if (formData.password !== formData.confirmPassword) {
-        toast("Les mots de passe ne correspondent pas !");
+        toast.error("Les mots de passe ne correspondent pas !");
         return;
       }
 
@@ -81,12 +82,15 @@ export default function Account() {
         });
 
         if (response?.status === 201) {
-          toast("Inscription réussie !");
+          toast.success("Inscription réussie !");
           setIsLogin(true);
+        } else {
+          toast.error(
+            response?.data?.message || "Erreur lors de l'inscription"
+          );
         }
       } catch (error) {
-        console.error("Erreur lors de l'inscription :", error);
-        toast(
+        toast.error(
           "Une erreur s'est produite lors de l'inscription. Veuillez réessayer."
         );
       }
