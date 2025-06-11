@@ -8,6 +8,7 @@ import Pricing from "./views/Pricing/Pricing";
 import Account from "./views/Connexion/Connexion";
 import Profile from "./views/Profile/Profile";
 import Help from "./views/Help/Help";
+import ResetPassword from "./views/ResetPassword/ResetPassword";
 import { AuthProvider } from "./core/auth/AuthContext";
 import ProtectedRoute from "./core/config/protectedRoute";
 import Legal from "./views/Legal/Legal";
@@ -23,9 +24,10 @@ export default function App() {
           <Route path="/chat" element={<ChatInterface />} />
           <Route path="/features" element={<Features />} />
           <Route path="/about" element={<About />} />
-          <Route path="/pricing" element={<Pricing />} />
+          <Route path="/pricing" element={<Pricing />} />{" "}
           <Route path="/help" element={<Help />} />
           <Route path="/login" element={<Account />} />
+          <Route path="/reset_password" element={<ResetPassword />} />
           <Route path="/legal" element={<Legal />} />
           {/* Routes protégées */}
           <Route element={<ProtectedRoute />}>

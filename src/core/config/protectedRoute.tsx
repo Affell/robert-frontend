@@ -2,6 +2,7 @@ import { Outlet, Navigate } from "react-router-dom";
 import { useAuth } from "../auth/AuthContext";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { ClipLoader } from "react-spinners";
 
 export default function ProtectedRoute() {
   const [isChecking, setIsChecking] = useState<boolean>(true);
@@ -24,7 +25,14 @@ export default function ProtectedRoute() {
 
   // Attendre que l'AuthProvider et la vérification soient terminés
   if (loading || isChecking) {
-    return <div className="loading-screen">Chargement...</div>;
+    return (
+      <ClipLoader
+        color="#f97316"
+        size={24}
+        className="mx-auto mt-20"
+        aria-label="Loading..."
+      />
+    );
   }
 
   // Si pas de token ou pas authentifié, rediriger vers la page d'accueil
