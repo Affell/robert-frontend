@@ -194,13 +194,19 @@ export const useChatSessions = ({
     }
     return null;
   };
-
   // Charger les sessions au démarrage
   useEffect(() => {
     if (isAuthenticated && token) {
       fetchSessions();
     }
   }, [isAuthenticated, token]);
+
+  // Nettoyer les messages quand on n'a plus de session active
+  useEffect(() => {
+    if (currentSessionId === null) {
+      setCurrentMessages([]);
+    }
+  }, [currentSessionId]);
 
   return {
     sessions,

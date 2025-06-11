@@ -49,10 +49,14 @@ export const useChat = ({
     token,
     isAuthenticated,
   });
-
   // Convertir les messages de session en format Message local
   const convertSessionMessagesToLocal = () => {
     const convertedMessages: Message[] = [];
+
+    // Vérifier que currentMessages existe et est un tableau
+    if (!currentMessages || !Array.isArray(currentMessages)) {
+      return convertedMessages;
+    }
 
     currentMessages.forEach((msg) => {
       // Message utilisateur
@@ -71,13 +75,12 @@ export const useChat = ({
         timestamp: new Date(msg.created_at),
       });
     });
-
     return convertedMessages;
   }; // Charger les messages de session si un sessionId est fourni
   useEffect(() => {
     if (isAuthenticated && token && sessionId && !justCreatedSession) {
       fetchSessionMessages(sessionId);
-    } else if (isAuthenticated && sessionId === null) {
+    } else if (isAuthenticated && sessionId === null && !justCreatedSession) {
       // Nouvelle session - remettre les messages par défaut
       setMessages([
         {
@@ -94,14 +97,32 @@ export const useChat = ({
     if (justCreatedSession) {
       setJustCreatedSession(false);
     }
-  }, [sessionId, isAuthenticated, token, justCreatedSession]);
-
-  // Mettre à jour les messages locaux quand les messages de session changent
+  }, [sessionId, isAuthenticated, token, justCreatedSession]); // Mettre à jour les messages locaux quand les messages de session changent
   useEffect(() => {
-    if (isAuthenticated && currentMessages.length > 0) {
+    if (
+      isAuthenticated &&
+      currentMessages &&
+      Array.isArray(currentMessages) &&
+      currentMessages.length > 0
+    ) {
       setMessages(convertSessionMessagesToLocal());
+    } else if (
+      isAuthenticated &&
+      sessionId === null &&
+      (!currentMessages || currentMessages.length === 0)
+    ) {
+      // Si on est sur une nouvelle session et qu'il n'y a pas de messages, afficher le message de bienvenue
+      setMessages([
+        {
+          id: "1",
+          type: "bot",
+          content:
+            "Bienvenue dans Robert AI ! Comment puis-je vous aider aujourd'hui ?",
+          timestamp: new Date(),
+        },
+      ]);
     }
-  }, [currentMessages, isAuthenticated]);
+  }, [currentMessages, isAuthenticated, sessionId]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });

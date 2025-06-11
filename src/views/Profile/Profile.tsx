@@ -11,6 +11,9 @@ import {
   AlertCircle,
   History,
   Trash2,
+  Lock,
+  Eye,
+  EyeOff,
 } from "lucide-react";
 import "./Profile.css";
 import Header from "../../components/Header/Header";
@@ -20,6 +23,8 @@ import { getUserInfo, type UserData } from "../../core/api/APIManager";
 import { postFetch } from "../../core/api/fetch";
 import { useChatSessions } from "../../core/hooks/useChatSessions";
 import { ClipLoader } from "react-spinners";
+import { toast, ToastContainer } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 export default function Profile() {
   const { token, isAuthenticated } = useAuth();
@@ -35,6 +40,14 @@ export default function Profile() {
   const [updateLoading, setUpdateLoading] = useState(false);
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const [updateError, setUpdateError] = useState<string | null>(null);
+
+  // États pour la suppression de compte
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deletePassword, setDeletePassword] = useState("");
+  const [showDeletePassword, setShowDeletePassword] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const navigate = useNavigate();
 
   // Hook pour gérer l'historique des conversations
   const {
@@ -148,17 +161,17 @@ export default function Profile() {
       });
     }
   };
-
   // Sauvegarder les modifications
   const saveChanges = async () => {
     if (!token) return;
 
-    const response = await postFetch("/auth/me", editData, {
-      "Robert-Connect-Token": token,
-    });
     setUpdateLoading(true);
     setUpdateError(null);
     setUpdateSuccess(false);
+
+    const response = await postFetch("/auth/me", editData, {
+      "Robert-Connect-Token": token,
+    });
 
     if (response.status === 200) {
       if (userData) {
@@ -173,6 +186,55 @@ export default function Profile() {
     } else {
       setUpdateError("Erreur lors de la mise à jour des données");
     }
+    setUpdateLoading(false);
+  };
+
+  // Fonctions pour la suppression de compte
+  const handleDeleteAccount = async () => {
+    if (!token || !deletePassword.trim()) {
+      toast.error("Veuillez saisir votre mot de passe.");
+      return;
+    }
+
+    setIsDeleting(true);
+
+    try {
+      const response = await postFetch(
+        "/auth/signout",
+        { password: deletePassword },
+        {
+          "Robert-Connect-Token": token,
+        }
+      );
+      if (response.status === 200) {
+        setShowDeleteModal(false);
+        navigate("/");
+        toast.success("Votre compte a été supprimé avec succès.");
+      } else {
+        setShowDeleteModal(false);
+        toast.error(
+          response?.data?.message || "Erreur lors de la suppression du compte."
+        );
+      }
+    } catch (error) {
+      setShowDeleteModal(false);
+      toast.error(
+        "Une erreur s'est produite lors de la suppression du compte."
+      );
+    } finally {
+      setIsDeleting(false);
+      setDeletePassword("");
+    }
+  };
+
+  const openDeleteModal = () => {
+    setShowDeleteModal(true);
+    setDeletePassword("");
+  };
+
+  const closeDeleteModal = () => {
+    setShowDeleteModal(false);
+    setDeletePassword("");
   };
 
   if (loading) {
@@ -212,6 +274,7 @@ export default function Profile() {
 
   return (
     <div className="profile-page">
+      <ToastContainer />
       <Header />
       <main className="profile-main">
         <div className="profile-container">
@@ -225,15 +288,20 @@ export default function Profile() {
               <h1>
                 {userData.firstname} {userData.lastname}
               </h1>
-              <p className="profile-email">{userData.email}</p>
-
+              <p className="profile-email">{userData.email}</p>{" "}
               {/* Actions de profil */}
               <div className="profile-actions">
                 {!isEditing ? (
-                  <button onClick={startEditing} className="edit-btn">
-                    <Edit3 size={16} />
-                    Modifier le profil
-                  </button>
+                  <>
+                    <button onClick={startEditing} className="edit-btn">
+                      <Edit3 size={16} />
+                      Modifier le profil
+                    </button>
+                    <button onClick={openDeleteModal} className="delete-btn">
+                      <Trash2 size={16} />
+                      Supprimer le compte
+                    </button>
+                  </>
                 ) : (
                   <div className="edit-actions">
                     <button
@@ -251,7 +319,6 @@ export default function Profile() {
                   </div>
                 )}
               </div>
-
               {/* Messages de feedback */}
               {updateSuccess && (
                 <div className="success-message">
@@ -259,7 +326,6 @@ export default function Profile() {
                   Informations mises à jour avec succès !
                 </div>
               )}
-
               {updateError && (
                 <div className="error-message">
                   <AlertCircle size={16} />
@@ -421,6 +487,94 @@ export default function Profile() {
           </div>
         </div>
       </main>
+
+      {/* Modal de suppression de compte */}
+      {showDeleteModal && (
+        <div className="modal-overlay" onClick={closeDeleteModal}>
+          <div
+            className="modal-content delete-modal"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="modal-header">
+              <h2>Supprimer définitivement le compte</h2>
+              <button className="modal-close" onClick={closeDeleteModal}>
+                ×
+              </button>
+            </div>
+
+            <div className="modal-body">
+              <div className="warning-section">
+                <AlertCircle className="warning-icon" />
+                <div className="warning-content">
+                  <h3>⚠️ Action irréversible</h3>
+                  <p>
+                    La suppression de votre compte entraînera la perte
+                    définitive de :
+                  </p>
+                  <ul>
+                    <li>Toutes vos conversations et historique</li>
+                    <li>Vos préférences et paramètres</li>
+                    <li>Toutes les données associées à votre compte</li>
+                  </ul>
+                  <p className="warning-text">
+                    <strong>Cette action ne peut pas être annulée.</strong>
+                  </p>
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="delete-password">
+                  Saisissez votre mot de passe pour confirmer :
+                </label>
+                <div className="input-with-icon">
+                  <Lock className="input-icon" />
+                  <input
+                    type={showDeletePassword ? "text" : "password"}
+                    id="delete-password"
+                    value={deletePassword}
+                    onChange={(e) => setDeletePassword(e.target.value)}
+                    placeholder="Votre mot de passe"
+                    autoFocus
+                    disabled={isDeleting}
+                  />
+                  <button
+                    type="button"
+                    className="password-toggle"
+                    onClick={() => setShowDeletePassword(!showDeletePassword)}
+                    disabled={isDeleting}
+                  >
+                    {showDeletePassword ? (
+                      <EyeOff size={20} />
+                    ) : (
+                      <Eye size={20} />
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                onClick={closeDeleteModal}
+                disabled={isDeleting}
+              >
+                Annuler
+              </button>
+              <button
+                type="button"
+                className={`btn btn-danger ${isDeleting ? "loading" : ""}`}
+                onClick={handleDeleteAccount}
+                disabled={isDeleting || !deletePassword.trim()}
+              >
+                {isDeleting ? "Suppression..." : "Supprimer définitivement"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <Footer />
     </div>
   );

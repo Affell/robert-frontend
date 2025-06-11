@@ -117,8 +117,8 @@ export default function ChatComponent({ isAuthenticated }: ChatComponentProps) {
     setCurrentSessionId(null);
     setShowHistory(false);
 
-    // Créer une nouvelle session seulement au premier message
-    // Pour l'instant, on met juste sessionId à null pour une nouvelle conversation
+    // Forcer le rechargement des messages par défaut
+    // Le useEffect dans useChat va détecter que sessionId === null et remettre les messages par défaut
   };
 
   const handleSelectSessionAPI = (sessionId: number) => {
