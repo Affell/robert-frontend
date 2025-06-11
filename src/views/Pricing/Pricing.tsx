@@ -1,4 +1,4 @@
-import { Check, Star, Zap, Crown, Rocket } from "lucide-react";
+import { Check, Star, Zap, Crown } from "lucide-react";
 import { motion } from "framer-motion";
 import "./Pricing.css";
 import Header from "../../components/Header/Header";
@@ -111,11 +111,6 @@ export default function Pricing() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <div className="pricing-badge">
-              <Rocket size={16} />
-              <span>Tarifs Intelligents</span>
-            </div>
-
             <h1 className="pricing-title">
               Choisissez votre
               <span className="gradient-text"> niveau</span>
@@ -247,29 +242,6 @@ export default function Pricing() {
                 </p>
               </div>
             </div>
-          </motion.div>
-
-          {/* CTA Final */}
-          <motion.div
-            className="pricing-cta"
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.8 }}
-          >
-            <h2>Prêt à décrocher le 20/20 ?</h2>
-            <p>
-              Rejoignez plus de 50 000 utilisateurs qui ont déjà adopté Robert
-              AI
-            </p>
-            <motion.button
-              className="final-cta-button"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={handleStartChat}
-            >
-              Commencer maintenant
-              <Rocket size={20} />
-            </motion.button>
           </motion.div>
         </div>
       </div>

@@ -29,59 +29,31 @@ export default function Footer() {
                 <Mail size={20} />
               </a>
             </div>
-          </div>
-
-          {/* Liens produit */}
+          </div>{" "}
+          {/* Navigation */}
           <div className="footer-section">
-            <h3 className="footer-title">Produit</h3>            <ul className="footer-links">
+            <h3 className="footer-title">Navigation</h3>
+            <ul className="footer-links">
               <li>
                 <a href="/features">Fonctionnalités</a>
               </li>
               <li>
-                <a href="#pricing">Tarifs</a>
+                <a href="/about">À propos</a>
               </li>
               <li>
-                <a href="#api">API</a>
-              </li>
-              <li>
-                <a href="#changelog">Changelog</a>
+                <a href="/pricing">Tarifs</a>
               </li>
             </ul>
           </div>
-
-          {/* Liens ressources */}
+          {/* Support */}
           <div className="footer-section">
-            <h3 className="footer-title">Ressources</h3>
+            <h3 className="footer-title">Support</h3>
             <ul className="footer-links">
-              <li>
-                <a href="#docs">Documentation</a>
-              </li>
-              <li>
-                <a href="#blog">Blog</a>
-              </li>
-              <li>
-                <a href="#guides">Guides</a>
-              </li>
-              <li>
-                <a href="#support">Support</a>
-              </li>
-            </ul>
-          </div>
-
-          {/* Liens entreprise */}
-          <div className="footer-section">
-            <h3 className="footer-title">Entreprise</h3>
-            <ul className="footer-links">
-              <li>
-                <a href="#about">À propos</a>
-              </li>
-              <li>
-                <a href="#careers">Carrières</a>
-              </li>              <li>
-                <a href="#press">Presse</a>
-              </li>
               <li>
                 <a href="/help">Aide</a>
+              </li>
+              <li>
+                <a href="/chat">Essayer Robert</a>
               </li>
             </ul>
           </div>
@@ -93,11 +65,6 @@ export default function Footer() {
             <p className="footer-copyright">
               © 2025 Robert AI. Tous droits réservés.
             </p>
-            <div className="footer-bottom-links">
-              <a href="#privacy">Confidentialité</a>
-              <a href="#terms">Conditions</a>
-              <a href="#cookies">Cookies</a>
-            </div>
           </div>
           <p className="footer-made-with">
             Fait avec <Heart size={16} className="heart" /> par l'équipe Robert

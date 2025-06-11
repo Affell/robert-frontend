@@ -1,4 +1,4 @@
-import { ArrowRight, Sparkles, Zap, Shield, Users } from "lucide-react";
+import { ArrowRight, Zap, Users } from "lucide-react";
 import { motion } from "framer-motion";
 import "./Hero.css";
 import { useNavigate } from "react-router-dom";
@@ -22,11 +22,6 @@ export default function Hero() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <div className="hero-badge">
-              <Sparkles size={16} />
-              <span>Powered by IA Avancée</span>
-            </div>
-
             <h1 className="hero-title">
               Votre assistant IA
               <span className="gradient-text"> intelligent</span>
@@ -93,10 +88,6 @@ export default function Hero() {
                 Commencer à discuter
                 <ArrowRight size={20} />
               </button>
-
-              <button className="btn btn-secondary btn-large">
-                Voir la démo
-              </button>
             </div>
 
             <div className="hero-stats">
@@ -130,17 +121,6 @@ export default function Hero() {
               <p className="feature-description">
                 Obtenez des réponses précises et contextuelles en quelques
                 secondes grâce à notre IA avancée.
-              </p>
-            </div>
-
-            <div className="feature-card">
-              <div className="feature-icon">
-                <Shield />
-              </div>
-              <h3 className="feature-title">Sécurisé & Privé</h3>
-              <p className="feature-description">
-                Vos conversations sont chiffrées et protégées. Nous respectons
-                votre vie privée.
               </p>
             </div>
 

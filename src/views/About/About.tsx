@@ -1,14 +1,5 @@
 import { motion } from "framer-motion";
-import {
-  ArrowLeft,
-  Brain,
-  Shield,
-  Zap,
-  Users,
-  Github,
-  Mail,
-  Globe,
-} from "lucide-react";
+import { ArrowLeft, Brain, Zap } from "lucide-react";
 import "./About.css";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/Header/Header";
@@ -23,22 +14,10 @@ export default function About() {
         "Robert AI utilise les dernières technologies d'intelligence artificielle pour comprendre et répondre à vos questions avec précision.",
     },
     {
-      icon: <Shield size={32} />,
-      title: "Sécurisé & Privé",
-      description:
-        "Vos conversations sont chiffrées et votre vie privée est notre priorité. Aucune donnée n'est partagée avec des tiers.",
-    },
-    {
       icon: <Zap size={32} />,
       title: "Rapide & Efficace",
       description:
         "Des réponses instantanées grâce à une architecture optimisée et des serveurs haute performance.",
-    },
-    {
-      icon: <Users size={32} />,
-      title: "Interface Intuitive",
-      description:
-        "Une expérience utilisateur pensée pour être simple, élégante et accessible à tous.",
     },
   ];
 
@@ -143,13 +122,10 @@ export default function About() {
                   <strong>Frontend:</strong> React, TypeScript, Vite
                 </div>
                 <div className="tech-item">
-                  <strong>Backend:</strong> Node.js, Express, PostgreSQL
+                  <strong>Backend:</strong> Golang, Echo, PostgreSQL
                 </div>
                 <div className="tech-item">
-                  <strong>IA:</strong> Modèles de langage avancés
-                </div>
-                <div className="tech-item">
-                  <strong>Infrastructure:</strong> Cloud scalable et sécurisé
+                  <strong>IA:</strong> LLM Anthropic
                 </div>
               </div>
             </motion.section>
@@ -174,45 +150,7 @@ export default function About() {
                 ))}
               </div>
             </motion.section>
-
-            <motion.section
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 1.0 }}
-              className="about-section contact-section"
-            >
-              <h2>Contact</h2>
-              <p>
-                Vous avez des questions ou des suggestions ? N'hésitez pas à
-                nous contacter !
-              </p>
-
-              <div className="contact-links">
-                <a href="mailto:contact@robert-ai.com" className="contact-link">
-                  <Mail size={20} />
-                  contact@robert-ai.com
-                </a>
-                <a href="https://github.com/robert-ai" className="contact-link">
-                  <Github size={20} />
-                  GitHub
-                </a>
-                <a href="https://robert-ai.com" className="contact-link">
-                  <Globe size={20} />
-                  Site Web
-                </a>
-              </div>
-            </motion.section>
           </div>
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.1 }}
-            className="about-footer"
-          >
-            <p>&copy; 2024 Robert AI. Tous droits réservés.</p>
-            <p>Version 1.0.0 - Bêta</p>
-          </motion.div>
         </div>
       </motion.div>
       <Footer />
